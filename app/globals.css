@@ -10,6 +10,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-golivehub-purple: #9146ff;
+  --color-golivehub-black: #000000;
+  --color-golivehub-ice: #f0f0ff;
 }
 
 @media (prefers-color-scheme: dark) {
