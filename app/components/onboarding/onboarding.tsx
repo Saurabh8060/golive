@@ -128,7 +128,7 @@ const Onboarding = () => {
                         <input
                             type = 'date'
                             id = 'dateOfBirth'
-                            name = 'dateofBirth'
+                            name = 'dateOfBirth'
                             value = {form.dateOfBirth}
                             onChange = {handleChange}
                             required

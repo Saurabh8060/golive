@@ -6,13 +6,17 @@ import {useSession} from '@clerk/nextjs';
 import { SignedInSessionResource } from '@clerk/types';
 import { useEffect } from 'react';
 import Onboarding from '../components/onboarding/onboarding';
+import SelectInterests from '../components/onboarding/selectInterests';
+import { Tables } from '@/database/database.types';
+import LiveChannels from '../components/liveChannels/liveChannels';
+import HomeFeed from '../components/homeFeed/homeFeed';
 
 const AppPage = () => {
     const {session} = useSession();
-    const {supabase, setSupabaseClient, getUserData} = useDatabase();
+    const {supabase, setSupabaseClient, getUserData, getLivestreams, setLivestreamsMockData, removeLivestreamsMockData} = useDatabase();
     const [showOnboarding, setShowOnboarding] = useState(false);
     const [showSelectInterests, setShowSelectInterests] = useState(false);
-
+    const [livestreams, setLivestreams] = useState<Tables<'livestreams'>[]>([]);
     
 useEffect(() => {
     async function initializeSupabase(session: SignedInSessionResource) { 
@@ -43,22 +47,38 @@ useEffect(() => {
                 }else{
                     setShowOnboarding(false);
                     setShowSelectInterests(false);
+                    getLivestreams().then((livestreams) => {
+                        setLivestreams(livestreams);
+                    })
                 }
             }else{
                 setShowOnboarding(true);
             }
         });
     }
-}, [supabase, session?.user.id, getUserData]);
+}, [supabase, session?.user.id, getUserData, getLivestreams]);
 
 if(showOnboarding){
     return <Onboarding />
 }
 
+if(showSelectInterests){
+    return <SelectInterests />
+}
+
   return (
-    <section className = 'flex items-center justify-center'>
-        <h1>App is running</h1>
-    </section>
+    <>
+    <section className = 'grid h-full grid-cols-[auto_1fr]'>
+        <LiveChannels livestreams={livestreams} />
+        <HomeFeed livestreams = {livestreams} />
+        </section>
+        <button onClick = {() => setLivestreamsMockData()}>
+            Set Livestreams Mock Data
+        </button>
+         <button onClick = {() => setLivestreamsMockData()}>
+            Remove Livestreams Mock Data
+        </button>
+    </>
   )
 }
 

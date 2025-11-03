@@ -1,5 +1,3 @@
-
-
 export type Json =
   | string
   | number
@@ -16,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      livestreams: {
+        Row: {
+          categories: string[]
+          created_at: string
+          id: string
+          name: string
+          profile_image_url: string
+          user_name: string
+        }
+        Insert: {
+          categories: string[]
+          created_at?: string
+          id?: string
+          name: string
+          profile_image_url: string
+          user_name: string
+        }
+        Update: {
+          categories?: string[]
+          created_at?: string
+          id?: string
+          name?: string
+          profile_image_url?: string
+          user_name?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           created_at: string
