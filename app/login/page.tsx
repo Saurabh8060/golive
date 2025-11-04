@@ -19,7 +19,7 @@ const page = () => {
         <div className = 'flex items-center gap-8'>
           <SignedOut>
             <SignInButton>
-              <Button variant = {'secondary'}>Loog In</Button>
+              <Button variant = {'secondary'}>Log In</Button>
             </SignInButton>
             <SignUpButton>
               <Button variant = {'primary'}>Sign Up</Button>
