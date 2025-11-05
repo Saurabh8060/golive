@@ -7,7 +7,17 @@ import { User } from '../icons';
 import { Button } from '../button/button';
 import GoLiveForm from './goLiveForm';
 
-const StreamerView = ({call} : {call: Call}) => {
+const StreamerView = ({
+  call,
+  chatExpanded,
+  setChatExpanded,
+}: {
+  call: Call;
+  chatExpanded: boolean;
+  setChatExpanded: (expanded: boolean) => void;
+}) => {
+
+
     const {
         useCameraState,
         useMicrophoneState,

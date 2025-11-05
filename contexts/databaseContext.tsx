@@ -35,6 +35,11 @@ type DatabaseContextType = {
 
   setLivestreamsMockData: () => void;
   removeLivestreamsMockData: () => void;
+
+  followUser: (
+    currentUserId: string,
+    userToFollowid: string
+  ) => Promise<boolean>;
 };
 
 export const DatabaseContext = createContext<DatabaseContextType | null>(null);
@@ -253,6 +258,63 @@ export const DatabaseProvider = ({
     }
   }, [supabase]);
 
+  const followUser = useCallback(
+    async (currentUserId: string, userToFollowId: string): Promise<boolean> => {
+      if(!supabase){
+        console.log('[followUser] Supabase not initialized');
+        return false;
+      };
+
+      try{
+        const currentUser = await getUserData(currentUserId, 'user_id');
+        if(!currentUser) {
+          console.log('[followUser] Current user not found');
+          return false;
+        }
+        const userToFollow = await getUserData(userToFollowId, 'user_name');
+        if(!userToFollow){
+          console.log('[followUser] user to follow not found');
+          return false;
+        }
+
+        let updatedCurrentUserFollowing : string[] = [];
+        let updatedUserToFollowFollowers: string[] = [];
+
+        if(currentUser.following.includes(userToFollowId)){
+          updatedCurrentUserFollowing = currentUser.following.filter((id) => id !== userToFollow.user_id);
+          updatedUserToFollowFollowers = userToFollow.followers.filter((id) => id !== currentUserId);
+        }else{
+          updatedCurrentUserFollowing = [
+            ...currentUser.following,
+            userToFollowId,
+          ];
+          updatedUserToFollowFollowers = [
+            ...userToFollow.followers,
+            currentUserId
+          ];
+        }
+
+        const {error: currentUserError} = await supabase.from('users').update({following: updatedCurrentUserFollowing}).eq('user_id', currentUserId);
+
+        if(currentUserError){
+          console.log('[followuser] error updating current user following', currentUserError);
+          return false;
+        }
+
+        const {error: userToFollowError} = await supabase.from('users').update({followers: updatedUserToFollowFollowers}).eq('user_id', userToFollow.user_id);
+
+        if(userToFollowError){
+          console.log('[followUser] Error updating user to follow followers', userToFollowError);
+          return false;
+        }
+        console.log('[followerUser] successfully followed user');
+        return true;
+      }catch(error){
+        console.log('[followUser] error following user', error);
+        return false;
+      }
+    }, [supabase, getUserData]);
+
   return (
     <DatabaseContext.Provider
       value={{
@@ -267,6 +329,7 @@ export const DatabaseProvider = ({
         deleteLivestream,
         setLivestreamsMockData,
         removeLivestreamsMockData,
+        followUser
       }}
     >
       {children}
