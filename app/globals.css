@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #ffffff;
@@ -30,12 +30,6 @@ body {
   height: 100dvh;
 }
 
-@layer components {
-  .hover-raise {
-    @apply transition-transform duration-150 ease-in-out;
-  }
-
-  .hover-raise:hover {
-    @apply translate-x-2 -translate-y-2;
-  }
+.hover-raise {
+  @apply hover:translate-x-2 hover:-translate-y-2 transition-transform duration-150 ease-in-out;
 }
