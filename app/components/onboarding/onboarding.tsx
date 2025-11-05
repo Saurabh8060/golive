@@ -53,6 +53,7 @@ const Onboarding = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         submitUserData();
+        window.location.reload();
     };
 
     if(!isOpen) return null;
