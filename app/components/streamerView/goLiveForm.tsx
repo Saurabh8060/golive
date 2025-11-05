@@ -75,7 +75,7 @@ const GoLiveForm = ({ onGolive, onCancel }: GoLiveFormProps) => {
   }
   return (
     <div className="fixed inset-0 bh-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+      <div className="bg-white text-gray-500 rounded-lg p-6 w-full max-w-md mx-4">
         <h2 className="text-xl font-semibold mb-4">Go Live</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
