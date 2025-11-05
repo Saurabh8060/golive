@@ -2,6 +2,7 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { createContext, useCallback, useContext, useState } from "react";
 import type { Tables } from "@/database/database.types";
 import { liveStreams } from "@/database/mockData";
+import { useSession } from "@clerk/nextjs";
 
 type DatabaseContextType = {
   supabase: SupabaseClient | null;
@@ -66,41 +67,100 @@ export const DatabaseProvider = ({
     setSupabase(supabaseClient);
   }, []);
 
-  const getUserData = useCallback(
-    async (
-      userId: string,
-      field: string = "user_id"
-    ): Promise<Tables<"users"> | null> => {
-      console.log(
-        "Getting user data from supabase: ",
-        !!supabase,
-        "for userId: ",
-        userId
-      );
-      if (!supabase) {
-        return null;
-      }
-      try {
-        const { data, error } = await supabase
-          .from("users")
-          .select("*")
-          .ilike(field, `%${userId}`)
-          .single();
+  // const getUserData = useCallback(
+  //   async (
+  //     userId: string,
+  //     field: string = "user_id"
+  //   ): Promise<Tables<"users"> | null> => {
+  //     console.log(
+  //       "Getting user data from supabase: ",
+  //       !!supabase,
+  //       "for userId: ",
+  //       userId
+  //     );
+  //     if (!supabase) {
+  //       return null;
+  //     }
+  //     try {
+  //       const { data, error } = await supabase
+  //         .from("users")
+  //         .select("*")
+  //         .ilike(field, `%${userId}`)
+  //         .single();
 
-        console.log("User data: ", data);
-        if (error) {
-          console.log("Error getting user data:", error);
-          setError(`Error getting user data:  ${error.message}`);
-          return null;
+  //       console.log("User data: ", data);
+  //       if (error) {
+  //         console.log("Error getting user data:", error);
+  //         setError(`Error getting user data:  ${error.message}`);
+  //         return null;
+  //       }
+  //       return data;
+  //     } catch (error) {
+  //       console.error("Error getting user data", error);
+  //       return null;
+  //     }
+  //   },
+  //   [supabase]
+  // );
+const { session } = useSession();
+  const getUserData = useCallback(
+  async (
+    userId: string,
+    field: string = "user_id"
+  ): Promise<Tables<"users"> | null> => {
+    console.log(
+      "Getting user data from supabase: ",
+      !!supabase,
+      "for userId: ",
+      userId
+    );
+    
+    if (!supabase) {
+      return null;
+    }
+    
+    try {
+      // Refresh token before making the request
+      if (session) {
+        const freshToken = await session.getToken();
+        if (freshToken && supabase) {
+          // Update auth token in supabase client
+          supabase.realtime.setAuth(freshToken);
         }
-        return data;
-      } catch (error) {
-        console.error("Error getting user data", error);
+      }
+      
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .ilike(field, `%${userId}`)
+        .single();
+
+      console.log("User data: ", data);
+      
+      if (error) {
+        // If JWT expired error, try one more time with fresh client
+        if (error.code === 'PGRST301' || error.message.includes('JWT')) {
+          console.log('JWT expired, reinitializing client...');
+          const newToken = await session?.getToken();
+          if (newToken) {
+            setSupabaseClient(newToken);
+            // Retry the request will happen on next call
+          }
+        }
+        
+        console.log("Error getting user data:", error);
+        setError(`Error getting user data: ${error.message}`);
         return null;
       }
-    },
-    [supabase]
-  );
+      
+      return data;
+    } catch (error) {
+      console.error("Error getting user data", error);
+      return null;
+    }
+  },
+  [supabase, session, setSupabaseClient]
+);
 
   const setUserData = useCallback(
     async (
@@ -186,12 +246,15 @@ export const DatabaseProvider = ({
       }
       const { data, error } = await supabase
         .from("livestreams")
-        .insert({
+        .upsert({
           name: name,
           categories: categories,
           user_name: userName,
           profile_image_url: profileImageUrl,
-        })
+        },
+       { 
+      onConflict: 'user_name' 
+      })
         .select()
         .single();
       if (error) {
