@@ -16,10 +16,6 @@ const CreateStreamUser = () => {
 
     const [creationOngoing, setCreationOngoing] = useState(true);
     const {user} = useUser();
-    alert('hi');
-    useEffect(() => {
-        alert('hi'); // ← This will now trigger
-    }, []);
 
     useEffect(() => {
         const createStreamUserOnServer = async () => {
