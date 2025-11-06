@@ -18,10 +18,7 @@ export default function NavigationBar() {
             </Link>
             <Link href={'/'} className='text-black font-bold'>
               Browse
-            </Link>
-            <Button variant={'icon'}>
-              <EllipsisVertical />
-            </Button>
+            </Link> 
           </div>
           <div className='sm:hidden'>
             <TrailingItems />
