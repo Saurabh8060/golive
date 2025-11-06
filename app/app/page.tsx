@@ -10,7 +10,7 @@ import Onboarding from '../components/onboarding/onboarding';
 import SelectInterests from '../components/onboarding/selectInterests';
 import LiveChannels from '../components/liveChannels/liveChannels';
 import HomeFeed from '../components/homeFeed/homeFeed';
-
+import Sample_Stream_Image from '../../../public/sample-image.png';
 
 export default function AppPage() {
   const { session } = useSession();
