@@ -20,16 +20,16 @@ const livestreamUUIDs = [
   "19f67993-cf12-403a-9cf0-cc9f8c4e47a3",
   "c5193c93-4c2c-4b20-8121-97fcfba5e9f3",
   "5f35c5e4-5a14-4bbf-b29f-537081a9d248",
-  "a9d62b84-b49d-4a4c-b2b2-8b08b7b4b6f0"
+  "a9d62b84-b49d-4a4c-b2b2-8b08b7b4b6f0",
 ];
 
-export const liveStreams: Tables<'livestreams'>[] = [
+export const liveStreams: Tables<"livestreams">[] = [
   {
     id: livestreamUUIDs[0],
     name: "Epic Battle Royale",
     categories: ["gaming", "esports"],
     created_at: "2025-10-08T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/men/1.jpg",
+    profile_image_url: "",
     user_name: "GamerGuy",
   },
   {
@@ -37,7 +37,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Coding with React 101",
     categories: ["technology", "education"],
     created_at: "2025-10-09T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/men/2.jpg",
+    profile_image_url: "",
     user_name: "DevMaster",
   },
   {
@@ -45,7 +45,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Lo-Fi Beats for Study",
     categories: ["music", "chill"],
     created_at: "2025-10-10T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/women/3.jpg",
+    profile_image_url: "",
     user_name: "MelodyMaker",
   },
   {
@@ -53,7 +53,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Cooking Around the World",
     categories: ["food", "travel"],
     created_at: "2025-10-11T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/men/4.jpg",
+    profile_image_url: "",
     user_name: "ChefTony",
   },
   {
@@ -61,7 +61,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Morning Yoga Flow",
     categories: ["health", "wellness"],
     created_at: "2025-10-12T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/women/5.jpg",
+    profile_image_url: "",
     user_name: "ZenSoul",
   },
   {
@@ -69,7 +69,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Live Football Commentary",
     categories: ["sports", "football"],
     created_at: "2025-10-13T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/men/6.jpg",
+    profile_image_url: "",
     user_name: "SportySam",
   },
   {
@@ -77,7 +77,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Photography Masterclass",
     categories: ["art", "education"],
     created_at: "2025-10-14T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/women/7.jpg",
+    profile_image_url: "",
     user_name: "ShutterQueen",
   },
   {
@@ -85,7 +85,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Daily News Breakdown",
     categories: ["news", "talk"],
     created_at: "2025-10-15T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/men/8.jpg",
+    profile_image_url: "",
     user_name: "NewsNerd",
   },
   {
@@ -93,7 +93,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Indie Game Dev Journey",
     categories: ["development", "gaming"],
     created_at: "2025-10-16T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/men/9.jpg",
+    profile_image_url: "",
     user_name: "PixelSmith",
   },
   {
@@ -101,7 +101,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Fitness Bootcamp",
     categories: ["fitness", "motivation"],
     created_at: "2025-10-17T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/women/10.jpg",
+    profile_image_url: "",
     user_name: "FitFrenzy",
   },
   {
@@ -109,7 +109,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Meditation & Mindfulness",
     categories: ["wellness", "spirituality"],
     created_at: "2025-10-18T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/men/11.jpg",
+    profile_image_url: "",
     user_name: "MindfulMax",
   },
   {
@@ -117,7 +117,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Speedrunning Classics",
     categories: ["gaming", "retro"],
     created_at: "2025-10-19T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/men/12.jpg",
+    profile_image_url: "",
     user_name: "Speedster",
   },
   {
@@ -125,7 +125,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Crypto Markets Explained",
     categories: ["finance", "technology"],
     created_at: "2025-10-20T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/men/13.jpg",
+    profile_image_url: "",
     user_name: "CoinGuru",
   },
   {
@@ -133,7 +133,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Travel Vlog: Japan",
     categories: ["travel", "culture"],
     created_at: "2025-10-21T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/women/14.jpg",
+    profile_image_url: "",
     user_name: "GlobeTrekker",
   },
   {
@@ -141,7 +141,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Building AI Projects",
     categories: ["technology", "education"],
     created_at: "2025-10-22T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/men/15.jpg",
+    profile_image_url: "",
     user_name: "AICoder",
   },
   {
@@ -149,7 +149,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Fashion Week Live",
     categories: ["fashion", "lifestyle"],
     created_at: "2025-10-23T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/women/16.jpg",
+    profile_image_url: "",
     user_name: "StyleStar",
   },
   {
@@ -157,7 +157,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Stand-Up Comedy Hour",
     categories: ["comedy", "entertainment"],
     created_at: "2025-10-24T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/men/17.jpg",
+    profile_image_url: "",
     user_name: "LaughLad",
   },
   {
@@ -165,7 +165,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Art of Calligraphy",
     categories: ["art", "craft"],
     created_at: "2025-10-25T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/women/18.jpg",
+    profile_image_url: "",
     user_name: "InkMuse",
   },
   {
@@ -173,7 +173,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "React Native Deep Dive",
     categories: ["programming", "mobile"],
     created_at: "2025-10-26T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/men/19.jpg",
+    profile_image_url: "",
     user_name: "CodeWizard",
   },
   {
@@ -181,7 +181,7 @@ export const liveStreams: Tables<'livestreams'>[] = [
     name: "Behind the Scenes: Music Studio",
     categories: ["music", "production"],
     created_at: "2025-10-27T00:00:00Z",
-    profile_image_url: "https://randomuser.me/api/portraits/men/20.jpg",
+    profile_image_url: "",
     user_name: "SoundSmith",
   },
 ];

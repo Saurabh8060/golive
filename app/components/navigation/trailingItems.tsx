@@ -46,7 +46,7 @@ const TrailingItems = () => {
       {/* Profile/User icon */}
       <Link href="/app/dashboard">
         <Button variant="icon" size="sm">
-          <User />
+          <User /> Go Live
         </Button>
       </Link>
     </div>
