@@ -23,6 +23,8 @@
   }
 }
 
+
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -32,4 +34,13 @@ body {
 
 .hover-raise {
   @apply hover:translate-x-2 hover:-translate-y-2 transition-transform duration-150 ease-in-out;
+}
+
+html, body {
+  width: 100vw;
+  min-width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }

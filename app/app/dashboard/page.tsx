@@ -68,8 +68,10 @@ const Dashboard = () => {
 
       const streamCall = streamClient.call("livestream", callId);
       await streamCall.join({ create: true });
+      await streamCall.goLive(); 
       setClient(streamClient);
       setCall(streamCall);
+
       setUserName(userData.user_name);
     };
     enterCall();
