@@ -5,12 +5,16 @@ import React from "react";
 import Badge from "./badge";
 import { categories } from "@/lib/types/category";
 import Sample_Stream_Image from '../../../public/sample-image.png';
+import { useDatabase } from "@/contexts/databaseContext";
+import { useSession } from "@clerk/nextjs";
 
 const HomeFeed = ({
   livestreams,
 }: {
   livestreams: Tables<"livestreams">[];
 }) => {
+  const { session } = useSession();
+
   return (
     <div className="bg-white w-full h-full text-gray-400 overflow-y-scroll">
       <section className="p-4">
@@ -19,10 +23,15 @@ const HomeFeed = ({
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
           {livestreams.map((livestream) => (
+            <>
+            {console.log(livestream)}
             <button
               key={livestream.id}
               onClick={() => {
                 console.log("redirecting to /app/", livestream.user_name);
+                // console.log(session, '---------');
+                // if(session?.user.id == livestream)
+
                 redirect(`/app/${livestream.user_name}`);
               }}
               className="cursor-pointer"
@@ -45,7 +54,7 @@ const HomeFeed = ({
                   {livestream.name}
                 </h3>
                 <p className="text-sm text-start text-gray-500">
-                  {livestream.user_name}
+                  {livestream.creator_name}
                 </p>
                 <div className="flex items-center gap-2 pt-0.5 flex-wrap">
                   {livestream.categories.map((category, index) => (
@@ -54,6 +63,7 @@ const HomeFeed = ({
                 </div>
               </div>
             </button>
+            </>
           ))}
         </div>
       </section>

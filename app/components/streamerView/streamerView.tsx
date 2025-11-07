@@ -61,7 +61,7 @@ export default function StreamerView({
       const userId = session?.user.id;
       if (userId) {
         const userData = await getUserData(userId);
-        if (userData) setCurrentUserName(userData.user_name);
+        if (userData) setCurrentUserName(userData.user_id);
       }
     };
     getCurrentUser();
@@ -162,7 +162,7 @@ export default function StreamerView({
           <span>{participantCount}</span>
         </div>
 
-        <Button
+        <Button 
           variant='primary'
           onClick={async () => {
             if (isLive) {
@@ -262,7 +262,7 @@ export default function StreamerView({
             <Button
               className={`border-2 ${
                 selectedDeviceInfo?.deviceId === device.deviceId
-                  ? 'border-twitch-purple'
+                  ? 'border-golivehub-purple'
                   : 'border-transparent'
               }`}
               variant='secondary'
@@ -282,7 +282,6 @@ export default function StreamerView({
         <GoLiveForm
           onGoLive={() => {
             setShowGoLiveForm(false);
-            call.goLive();
           }}
           onCancel={() => setShowGoLiveForm(false)}
         />

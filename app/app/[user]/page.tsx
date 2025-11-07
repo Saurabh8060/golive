@@ -36,6 +36,7 @@ export default function UserPage({
   );
   const [call, setCall] = useState<Call | null>(null);
   const { session } = useSession();
+
   const { supabase, getUserData, setSupabaseClient, followUser } =
     useDatabase();
 
@@ -49,7 +50,8 @@ export default function UserPage({
       if (!streamClient || !user) return;
 
       try {
-        const call = streamClient.call('livestream', user.toLowerCase());
+        console.log('000000000000', user)
+        const call = streamClient.call('livestream', user);
 
         await call.get();
 
@@ -111,7 +113,7 @@ export default function UserPage({
         return;
       }
 
-      const userData = await getUserData(user, 'user_name');
+      const userData = await getUserData(user, 'user_id');
       if (!userData) {
         console.error('[UserPage] Streamer data not found for:', user);
         return;
