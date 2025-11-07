@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           categories: string[]
           created_at: string
+          creator_name: string | null
           id: string
           name: string
           profile_image_url: string
@@ -26,6 +27,7 @@ export type Database = {
         Insert: {
           categories: string[]
           created_at?: string
+          creator_name?: string | null
           id?: string
           name: string
           profile_image_url: string
@@ -34,6 +36,7 @@ export type Database = {
         Update: {
           categories?: string[]
           created_at?: string
+          creator_name?: string | null
           id?: string
           name?: string
           profile_image_url?: string

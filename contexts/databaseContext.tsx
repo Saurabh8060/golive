@@ -29,7 +29,8 @@ type DatabaseContextType = {
     name: string,
     categories: string[],
     userName: string,
-    profileImageUrl: string
+    profileImageUrl: string,
+    creatorName: string
   ) => Promise<Tables<"livestreams"> | null>;
 
   deleteLivestream: (userName: string) => Promise<boolean>;
@@ -67,41 +68,6 @@ export const DatabaseProvider = ({
     setSupabase(supabaseClient);
   }, []);
 
-  // const getUserData = useCallback(
-  //   async (
-  //     userId: string,
-  //     field: string = "user_id"
-  //   ): Promise<Tables<"users"> | null> => {
-  //     console.log(
-  //       "Getting user data from supabase: ",
-  //       !!supabase,
-  //       "for userId: ",
-  //       userId
-  //     );
-  //     if (!supabase) {
-  //       return null;
-  //     }
-  //     try {
-  //       const { data, error } = await supabase
-  //         .from("users")
-  //         .select("*")
-  //         .ilike(field, `%${userId}`)
-  //         .single();
-
-  //       console.log("User data: ", data);
-  //       if (error) {
-  //         console.log("Error getting user data:", error);
-  //         setError(`Error getting user data:  ${error.message}`);
-  //         return null;
-  //       }
-  //       return data;
-  //     } catch (error) {
-  //       console.error("Error getting user data", error);
-  //       return null;
-  //     }
-  //   },
-  //   [supabase]
-  // );
 const { session } = useSession();
   const getUserData = useCallback(
   async (
@@ -238,7 +204,8 @@ const { session } = useSession();
       name: string,
       categories: string[],
       userName: string,
-      profileImageUrl: string
+      profileImageUrl: string,
+      creatorName: string
     ): Promise<Tables<"livestreams"> | null> => {
       if (!supabase) {
         console.log("[createLivestream] supabase not initialized");
@@ -251,6 +218,7 @@ const { session } = useSession();
           categories: categories,
           user_name: userName,
           profile_image_url: profileImageUrl,
+          creator_name: creatorName
         },
        { 
       onConflict: 'user_name' 

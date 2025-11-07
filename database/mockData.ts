@@ -31,6 +31,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-08T00:00:00Z",
     profile_image_url: "",
     user_name: "GamerGuy",
+    creator_name: "Ethan Carter",
   },
   {
     id: livestreamUUIDs[1],
@@ -39,6 +40,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-09T00:00:00Z",
     profile_image_url: "",
     user_name: "DevMaster",
+    creator_name: "Sophia Nguyen",
   },
   {
     id: livestreamUUIDs[2],
@@ -47,6 +49,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-10T00:00:00Z",
     profile_image_url: "",
     user_name: "MelodyMaker",
+    creator_name: "Liam Brooks",
   },
   {
     id: livestreamUUIDs[3],
@@ -55,6 +58,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-11T00:00:00Z",
     profile_image_url: "",
     user_name: "ChefTony",
+    creator_name: "Isabella Rossi",
   },
   {
     id: livestreamUUIDs[4],
@@ -63,6 +67,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-12T00:00:00Z",
     profile_image_url: "",
     user_name: "ZenSoul",
+    creator_name: "Ava Patel",
   },
   {
     id: livestreamUUIDs[5],
@@ -71,6 +76,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-13T00:00:00Z",
     profile_image_url: "",
     user_name: "SportySam",
+    creator_name: "Ryan Cooper",
   },
   {
     id: livestreamUUIDs[6],
@@ -79,6 +85,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-14T00:00:00Z",
     profile_image_url: "",
     user_name: "ShutterQueen",
+    creator_name: "Mia Johansson",
   },
   {
     id: livestreamUUIDs[7],
@@ -87,6 +94,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-15T00:00:00Z",
     profile_image_url: "",
     user_name: "NewsNerd",
+    creator_name: "Daniel Kim",
   },
   {
     id: livestreamUUIDs[8],
@@ -95,6 +103,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-16T00:00:00Z",
     profile_image_url: "",
     user_name: "PixelSmith",
+    creator_name: "Noah Evans",
   },
   {
     id: livestreamUUIDs[9],
@@ -103,6 +112,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-17T00:00:00Z",
     profile_image_url: "",
     user_name: "FitFrenzy",
+    creator_name: "Emily Johnson",
   },
   {
     id: livestreamUUIDs[10],
@@ -111,6 +121,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-18T00:00:00Z",
     profile_image_url: "",
     user_name: "MindfulMax",
+    creator_name: "Lucas Rivera",
   },
   {
     id: livestreamUUIDs[11],
@@ -119,6 +130,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-19T00:00:00Z",
     profile_image_url: "",
     user_name: "Speedster",
+    creator_name: "Olivia Bennett",
   },
   {
     id: livestreamUUIDs[12],
@@ -127,6 +139,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-20T00:00:00Z",
     profile_image_url: "",
     user_name: "CoinGuru",
+    creator_name: "Jack Thompson",
   },
   {
     id: livestreamUUIDs[13],
@@ -135,6 +148,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-21T00:00:00Z",
     profile_image_url: "",
     user_name: "GlobeTrekker",
+    creator_name: "Hana Sato",
   },
   {
     id: livestreamUUIDs[14],
@@ -143,6 +157,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-22T00:00:00Z",
     profile_image_url: "",
     user_name: "AICoder",
+    creator_name: "Evelyn Park",
   },
   {
     id: livestreamUUIDs[15],
@@ -151,6 +166,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-23T00:00:00Z",
     profile_image_url: "",
     user_name: "StyleStar",
+    creator_name: "Grace Lee",
   },
   {
     id: livestreamUUIDs[16],
@@ -159,6 +175,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-24T00:00:00Z",
     profile_image_url: "",
     user_name: "LaughLad",
+    creator_name: "Charlie Davis",
   },
   {
     id: livestreamUUIDs[17],
@@ -167,6 +184,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-25T00:00:00Z",
     profile_image_url: "",
     user_name: "InkMuse",
+    creator_name: "Sophia Turner",
   },
   {
     id: livestreamUUIDs[18],
@@ -175,6 +193,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-26T00:00:00Z",
     profile_image_url: "",
     user_name: "CodeWizard",
+    creator_name: "Aaron Patel",
   },
   {
     id: livestreamUUIDs[19],
@@ -183,5 +202,6 @@ export const liveStreams: Tables<"livestreams">[] = [
     created_at: "2025-10-27T00:00:00Z",
     profile_image_url: "",
     user_name: "SoundSmith",
+    creator_name: "Layla Garcia",
   },
 ];

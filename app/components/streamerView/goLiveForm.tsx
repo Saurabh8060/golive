@@ -57,8 +57,9 @@ export default function GoLiveForm({ onGoLive, onCancel }: GoLiveFormProps) {
       const livestream = await createLivestream(
         streamName.trim(),
         selectedCategories,
-        userData.user_name,
-        userData.image_url || 'https://randomuser.me/api/portraits/men/1.jpg'
+        userData.user_id,
+        userData.image_url || 'https://randomuser.me/api/portraits/men/1.jpg',
+        userData.user_name
       );
 
       if (livestream) {
