@@ -184,7 +184,6 @@ export default function StreamerView({
               }
             } else {
               setShowGoLiveForm(true);
-              await call.goLive();
             }
           }}
         >
@@ -280,6 +279,7 @@ export default function StreamerView({
       {/* Go Live form modal */}
       {showGoLiveForm && (
         <GoLiveForm
+          call={call}  
           onGoLive={() => {
             setShowGoLiveForm(false);
           }}

@@ -142,11 +142,11 @@ const { session } = useSession();
       const { data, error } = await supabase
         .from("users")
         .insert({
-          user_name: userName,
+          user_id: userName,
           image_url: imageUrl,
           mail: mail,
           date_of_birth: dateOfBirth,
-          user_id: userId,
+          user_name: userId,
           following: [],
           followers: [],
           interests: [],
@@ -216,12 +216,12 @@ const { session } = useSession();
         .upsert({
           name: name,
           categories: categories,
-          user_name: userName,
+          user_id: userName,
           profile_image_url: profileImageUrl,
           creator_name: creatorName
         },
        { 
-      onConflict: 'user_name' 
+      onConflict: 'user_id' 
       })
         .select()
         .single();
@@ -244,7 +244,7 @@ const { session } = useSession();
       const { error } = await supabase
         .from("livestreams")
         .delete()
-        .eq("user_name", userName);
+        .eq("user_id", userName);
       if (error) {
         console.log("Error creating livestream", error);
         setError(error.message);
@@ -302,7 +302,7 @@ const { session } = useSession();
           console.log('[followUser] Current user not found');
           return false;
         }
-        const userToFollow = await getUserData(userToFollowId, 'user_name');
+        const userToFollow = await getUserData(userToFollowId, 'user_id');
         if(!userToFollow){
           console.log('[followUser] user to follow not found');
           return false;
