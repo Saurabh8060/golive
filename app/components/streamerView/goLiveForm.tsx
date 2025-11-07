@@ -5,15 +5,17 @@ import { Button } from '../button/button';
 import { useDatabase } from '@/contexts/databaseContext';
 import { useSession } from '@clerk/nextjs';
 import { categories } from '@/lib/types/category';
+import { Call } from '@stream-io/video-client';
 
 interface GoLiveFormProps {
   onGoLive: () => void;
   onCancel: () => void;
+  call: Call;
 }
 
 const AVAILABLE_CATEGORIES = categories.map((category) => category.name);
 
-export default function GoLiveForm({ onGoLive, onCancel }: GoLiveFormProps) {
+export default function GoLiveForm({ onGoLive, onCancel, call }: GoLiveFormProps) {
   const [streamName, setStreamName] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,6 +66,7 @@ export default function GoLiveForm({ onGoLive, onCancel }: GoLiveFormProps) {
 
       if (livestream) {
         onGoLive();
+         await call.goLive();
       } else {
         alert('Failed to create livestream. Please try again.');
       }

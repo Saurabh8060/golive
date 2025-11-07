@@ -29,6 +29,7 @@ const Dashboard = () => {
       if (!apiKey) {
         throw new Error("NEXT_PUBLIC_STREAM_API_KEY is not set");
       }
+      
       const userId = session?.user.id;
 
       if (!userId) {
@@ -53,11 +54,11 @@ const Dashboard = () => {
       if (!userData) {
         throw new Error("User Data not found");
       }
-      const callId = userData.user_name.toLowerCase();
+      const callId = userData.user_id;
       const token = await createToken(userId);
       const user: User = {
         id: userId,
-        name: userData.user_name,
+        name: userData.user_id,
       };
 
       const streamClient = getClient({
@@ -72,7 +73,7 @@ const Dashboard = () => {
       setClient(streamClient);
       setCall(streamCall);
 
-      setUserName(userData.user_name);
+      setUserName(userData.user_id);
     };
     enterCall();
   }, [session, getUserData, supabase, setSupabaseClient, client, call]);

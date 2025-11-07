@@ -22,7 +22,7 @@ export type Database = {
           id: string
           name: string
           profile_image_url: string
-          user_name: string
+          user_id: string
         }
         Insert: {
           categories: string[]
@@ -31,7 +31,7 @@ export type Database = {
           id?: string
           name: string
           profile_image_url: string
-          user_name: string
+          user_id: string
         }
         Update: {
           categories?: string[]
@@ -40,7 +40,7 @@ export type Database = {
           id?: string
           name?: string
           profile_image_url?: string
-          user_name?: string
+          user_id?: string
         }
         Relationships: []
       }

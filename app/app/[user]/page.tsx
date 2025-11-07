@@ -50,7 +50,6 @@ export default function UserPage({
       if (!streamClient || !user) return;
 
       try {
-        console.log('000000000000', user)
         const call = streamClient.call('livestream', user);
 
         await call.get();
@@ -126,7 +125,7 @@ export default function UserPage({
         if (currentUserData && currentUserData.following.includes(user)) {
           setIsFollowing(true);
         }
-        setCurrentUserData(currentUserData?.user_name);
+        setCurrentUserData(currentUserData?.user_id);
       }
     };
 
@@ -157,7 +156,7 @@ export default function UserPage({
       const success = await followUser(session.user.id, user);
       if (success) {
         setIsFollowing(!isFollowing);
-        const updatedStreamerData = await getUserData(user, 'user_name');
+        const updatedStreamerData = await getUserData(user, 'user_id');
         if (updatedStreamerData) {
           setStreamerData(updatedStreamerData);
         }
@@ -190,7 +189,7 @@ export default function UserPage({
                   Stream Offline
                 </h1>
                 <p className="mt-2 text-lg drop-shadow-md">
-                  {streamerData?.user_name} is not currently streaming. Check
+                  {streamerData?.user_id} is not currently streaming. Check
                   back later!
                 </p>
               </div>
@@ -215,14 +214,14 @@ export default function UserPage({
               <div className="flex items-center space-x-4">
                 <Image
                   src={streamerData.image_url}
-                  alt={streamerData.user_name}
+                  alt={streamerData.user_id}
                   width={60}
                   height={60}
                   className="rounded-full"
                 />
                 <div>
                   <h2 className="text-xl font-bold">
-                    {streamerData.user_name}
+                    {streamerData.user_id}
                   </h2>
                   <p>{streamerData.followers.length} followers</p>
                 </div>
@@ -263,7 +262,7 @@ export default function UserPage({
             <div className="p-4 space-y-2">
               <h2 className="text-2xl font-bold">Following</h2>
               {streamerData.following.length === 0 && (
-                <p>{streamerData.user_name} is not following anyone</p>
+                <p>{streamerData.user_id} is not following anyone</p>
               )}
               {streamerData.following.map((following, index) => (
                 <div key={`${following}-${index}`}>

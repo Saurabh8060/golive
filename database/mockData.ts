@@ -30,7 +30,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["gaming", "esports"],
     created_at: "2025-10-08T00:00:00Z",
     profile_image_url: "",
-    user_name: "GamerGuy",
+    user_id: "GamerGuy",
     creator_name: "Ethan Carter",
   },
   {
@@ -39,7 +39,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["technology", "education"],
     created_at: "2025-10-09T00:00:00Z",
     profile_image_url: "",
-    user_name: "DevMaster",
+    user_id: "DevMaster",
     creator_name: "Sophia Nguyen",
   },
   {
@@ -48,7 +48,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["music", "chill"],
     created_at: "2025-10-10T00:00:00Z",
     profile_image_url: "",
-    user_name: "MelodyMaker",
+    user_id: "MelodyMaker",
     creator_name: "Liam Brooks",
   },
   {
@@ -57,7 +57,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["food", "travel"],
     created_at: "2025-10-11T00:00:00Z",
     profile_image_url: "",
-    user_name: "ChefTony",
+    user_id: "ChefTony",
     creator_name: "Isabella Rossi",
   },
   {
@@ -66,7 +66,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["health", "wellness"],
     created_at: "2025-10-12T00:00:00Z",
     profile_image_url: "",
-    user_name: "ZenSoul",
+    user_id: "ZenSoul",
     creator_name: "Ava Patel",
   },
   {
@@ -75,7 +75,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["sports", "football"],
     created_at: "2025-10-13T00:00:00Z",
     profile_image_url: "",
-    user_name: "SportySam",
+    user_id: "SportySam",
     creator_name: "Ryan Cooper",
   },
   {
@@ -84,7 +84,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["art", "education"],
     created_at: "2025-10-14T00:00:00Z",
     profile_image_url: "",
-    user_name: "ShutterQueen",
+    user_id: "ShutterQueen",
     creator_name: "Mia Johansson",
   },
   {
@@ -93,7 +93,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["news", "talk"],
     created_at: "2025-10-15T00:00:00Z",
     profile_image_url: "",
-    user_name: "NewsNerd",
+    user_id: "NewsNerd",
     creator_name: "Daniel Kim",
   },
   {
@@ -102,7 +102,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["development", "gaming"],
     created_at: "2025-10-16T00:00:00Z",
     profile_image_url: "",
-    user_name: "PixelSmith",
+    user_id: "PixelSmith",
     creator_name: "Noah Evans",
   },
   {
@@ -111,7 +111,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["fitness", "motivation"],
     created_at: "2025-10-17T00:00:00Z",
     profile_image_url: "",
-    user_name: "FitFrenzy",
+    user_id: "FitFrenzy",
     creator_name: "Emily Johnson",
   },
   {
@@ -120,7 +120,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["wellness", "spirituality"],
     created_at: "2025-10-18T00:00:00Z",
     profile_image_url: "",
-    user_name: "MindfulMax",
+    user_id: "MindfulMax",
     creator_name: "Lucas Rivera",
   },
   {
@@ -129,7 +129,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["gaming", "retro"],
     created_at: "2025-10-19T00:00:00Z",
     profile_image_url: "",
-    user_name: "Speedster",
+    user_id: "Speedster",
     creator_name: "Olivia Bennett",
   },
   {
@@ -138,7 +138,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["finance", "technology"],
     created_at: "2025-10-20T00:00:00Z",
     profile_image_url: "",
-    user_name: "CoinGuru",
+    user_id: "CoinGuru",
     creator_name: "Jack Thompson",
   },
   {
@@ -147,7 +147,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["travel", "culture"],
     created_at: "2025-10-21T00:00:00Z",
     profile_image_url: "",
-    user_name: "GlobeTrekker",
+    user_id: "GlobeTrekker",
     creator_name: "Hana Sato",
   },
   {
@@ -156,7 +156,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["technology", "education"],
     created_at: "2025-10-22T00:00:00Z",
     profile_image_url: "",
-    user_name: "AICoder",
+    user_id: "AICoder",
     creator_name: "Evelyn Park",
   },
   {
@@ -165,7 +165,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["fashion", "lifestyle"],
     created_at: "2025-10-23T00:00:00Z",
     profile_image_url: "",
-    user_name: "StyleStar",
+    user_id: "StyleStar",
     creator_name: "Grace Lee",
   },
   {
@@ -174,7 +174,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["comedy", "entertainment"],
     created_at: "2025-10-24T00:00:00Z",
     profile_image_url: "",
-    user_name: "LaughLad",
+    user_id: "LaughLad",
     creator_name: "Charlie Davis",
   },
   {
@@ -183,7 +183,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["art", "craft"],
     created_at: "2025-10-25T00:00:00Z",
     profile_image_url: "",
-    user_name: "InkMuse",
+    user_id: "InkMuse",
     creator_name: "Sophia Turner",
   },
   {
@@ -192,7 +192,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["programming", "mobile"],
     created_at: "2025-10-26T00:00:00Z",
     profile_image_url: "",
-    user_name: "CodeWizard",
+    user_id: "CodeWizard",
     creator_name: "Aaron Patel",
   },
   {
@@ -201,7 +201,7 @@ export const liveStreams: Tables<"livestreams">[] = [
     categories: ["music", "production"],
     created_at: "2025-10-27T00:00:00Z",
     profile_image_url: "",
-    user_name: "SoundSmith",
+    user_id: "SoundSmith",
     creator_name: "Layla Garcia",
   },
 ];

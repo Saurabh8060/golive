@@ -92,12 +92,14 @@ export default function AppPage() {
 
   return (
     <>
-      <section className="grid h-full grid-cols-[auto_1fr]">
+      <section className="flex h-screen w-screen overflow-hidden">
         <LiveChannels livestreams={livestreams} />
-        <HomeFeed livestreams={livestreams} />
+        <main className="flex-1 min-w-0 overflow-auto">
+          <HomeFeed livestreams={livestreams} />
+        </main>
       </section>
 
-      <div className="fixed bottom-4 left-4 flex space-x-2">
+      <div className="fixed bottom-4 left-4 flex space-x-2 z-50">
         <button
           onClick={() => {setLivestreamsMockData(); window.location.reload()}}
           className="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700"

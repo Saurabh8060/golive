@@ -28,11 +28,14 @@ const HomeFeed = ({
             <button
               key={livestream.id}
               onClick={() => {
-                console.log("redirecting to /app/", livestream.user_name);
-                // console.log(session, '---------');
-                // if(session?.user.id == livestream)
+                console.log("redirecting to /app/", livestream.user_id);
+                if(session?.user.id == livestream?.user_id){
+                  redirect(`/app/dashboard`)
+                }else{
+                  redirect(`/app/${livestream.user_id}`);
+                }
 
-                redirect(`/app/${livestream.user_name}`);
+                
               }}
               className="cursor-pointer"
             >
