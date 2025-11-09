@@ -15,10 +15,6 @@ import {
 const TrailingItems = () => {
   return (
     <div className="flex items-center gap-2 h-10">
-      {/* Mail icon */}
-      <button className="text-black rounded-full hover:bg-slate-200 p-2 cursor-pointer">
-        <Mail />
-      </button>
 
       {/* When user is signed out */}
       <SignedOut>
@@ -44,11 +40,13 @@ const TrailingItems = () => {
       </SignedIn>
 
       {/* Profile/User icon */}
+      <SignedIn>
       <Link href="/app/dashboard">
         <Button variant="icon" size="sm">
-          <User /> Go Live
+          <User /> Go live
         </Button>
       </Link>
+      </SignedIn>
     </div>
   );
 };
