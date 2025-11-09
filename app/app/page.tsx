@@ -58,7 +58,6 @@ export default function AppPage() {
 
       try {
         const user = await getUserData(session.user.id);
-        console.log(user);
         if (!user) {
           setShowOnboarding(true);
         } else if (user.interests && user.interests.length === 0) {
