@@ -50,9 +50,9 @@ const Onboarding = () => {
         }
     }, [form, user, setUserData]);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        submitUserData();
+        await submitUserData();
         window.location.reload();
     };
 
