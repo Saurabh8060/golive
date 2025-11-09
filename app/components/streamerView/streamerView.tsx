@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useDatabase } from '@/contexts/databaseContext';
@@ -141,19 +140,6 @@ export default function StreamerView({
           </div>
         )}
       </div>
-
-      {/* Chat toggle button */}
-      {!chatExpanded && setChatExpanded && (
-        <button
-          className={`absolute top-4 right-4 bg-slate-100/40 p-4 rounded-full text-sm text-secondary text-black flex gap-2 ${
-            chatExpanded ? 'rotate-180' : ''
-          } transition-transform duration-150 ease-in-out`}
-          onClick={() => setChatExpanded(!chatExpanded)}
-        >
-          <ArrowRight />
-          <span>Open chat</span>
-        </button>
-      )}
 
       {/* Controls */}
       <div className='flex gap-4 p-6'>

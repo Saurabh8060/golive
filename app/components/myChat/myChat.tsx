@@ -20,11 +20,13 @@ export default function MyChat({
   userName,
   isStreamer,
   setChatExpanded,
+  channelId, // ✅ Add channelId prop - this should be the livestream ID
 }: {
   userId: string;
   userName: string;
   isStreamer: boolean;
   setChatExpanded?: (expanded: boolean) => void;
+  channelId: string; // ✅ Shared channel ID for all users watching this stream
 }) {
   const [client, setClient] = useState<any>();
   const [channel, setChannel] = useState<any>();
@@ -37,6 +39,8 @@ export default function MyChat({
         console.error('[MyChat] Stream API key is not set');
         return;
       }
+      
+      console.log('[MyChat] Initializing with:', { userId, userName, channelId });
       
       // Dynamic import to avoid TypeScript issues
       const streamChatModule = await import('stream-chat');
@@ -57,14 +61,32 @@ export default function MyChat({
       if (!client) {
         return;
       }
-      const chatChannel = client.channel('livestream', userName.toLowerCase());
-      await chatChannel.create();
-      await chatChannel.addMembers([userId], {
-        text: `${userName} joined the stream.`,
-        user_id: userId,
-      });
-      setCustomColor(createCustomColor());
-      setChannel(chatChannel);
+      
+      // ✅ Validate channelId
+      if (!channelId || typeof channelId !== 'string') {
+        console.error('[MyChat] Invalid channelId:', channelId);
+        return;
+      }
+      
+      try {
+        console.log('[MyChat] Creating/joining channel:', channelId);
+        
+        // ✅ Create channel with explicit ID and created_by
+        const chatChannel = client.channel('livestream', channelId, {
+          name: `${channelId}'s Stream`,
+          created_by_id: userId, // Specify creator
+        });
+        
+        // Get or create the channel
+        await chatChannel.create();
+        
+        console.log('[MyChat] Successfully joined channel:', channelId);
+        
+        setCustomColor(createCustomColor());
+        setChannel(chatChannel);
+      } catch (error) {
+        console.error('[MyChat] Error creating/joining channel:', error);
+      }
     };
 
     if (!client) {
@@ -75,7 +97,7 @@ export default function MyChat({
     if (!channel) {
       createChannel();
     }
-  }, [client, userName, userId, channel]);
+  }, [client, userName, userId, channel, channelId]); // ✅ Add channelId to dependencies
 
   const submitHandler: MessageInputProps['overrideSubmitHandler'] = useCallback(
     async (params: any) => {

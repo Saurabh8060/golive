@@ -35,7 +35,8 @@ export default function AppPage() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showSelectInterests, setShowSelectInterests] = useState(false);
   const [livestreams, setLivestreams] = useState<Tables<'livestreams'>[]>([]);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     async function initializeSupabase(session: SignedInSessionResource) {
@@ -90,29 +91,37 @@ export default function AppPage() {
     return <SelectInterests />;
   }
 
-  return (
+return (
     <>
-      <section className="flex h-screen w-screen overflow-hidden">
-        <LiveChannels livestreams={livestreams} />
-        <main className="flex-1 min-w-0 overflow-auto">
+      <section className="relative flex h-screen w-screen overflow-hidden">
+        {/* Sidebar with fixed width when closed, overlays when open */}
+        <div 
+          className="relative z-20 flex-shrink-0 transition-[width] duration-700 ease-in-out"
+          style={{ width: isSidebarOpen ? '320px' : '64px' }}
+        >
+          <LiveChannels 
+            livestreams={livestreams}
+            isOpen={isSidebarOpen}
+            onToggle={setIsSidebarOpen}
+          />
+        </div>
+        
+        {/* Main content area */}
+        <main 
+          className="relative flex-1 min-w-0 overflow-auto transition-[margin-left] duration-700 ease-in-out"
+          style={{ marginLeft: isSidebarOpen ? '-256px' : '0' }}
+        >
           <HomeFeed livestreams={livestreams} />
+          
+          {/* Translucent overlay when sidebar is open */}
+          <div 
+            className={`absolute inset-0 bg-black transition-opacity duration-700 ease-in-out pointer-events-none ${
+              isSidebarOpen ? 'opacity-60' : 'opacity-0'
+            }`}
+            style={{ zIndex: 10 }}
+          />
         </main>
       </section>
-
-      <div className="fixed bottom-4 left-4 flex space-x-2 z-50">
-        <button
-          onClick={() => {setLivestreamsMockData(); window.location.reload()}}
-          className="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700"
-        >
-          Set Livestreams Mock Data
-        </button>
-        <button
-          onClick={() => {removeLivestreamsMockData(); window.location.reload()}}
-          className="bg-gray-300 text-black px-3 py-1 rounded-lg text-sm hover:bg-gray-400"
-        >
-          Remove Livestreams Mock Data
-        </button>
-      </div>
-    </>
-  );
+      </>
+)
 };
