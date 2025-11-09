@@ -97,43 +97,51 @@ export default function StreamerView({
   }, [isLive, isCamEnabled, isMicEnabled, camera, microphone]);
 
   return (
-    <div className='flex flex-col gap-2 w-full min-h-full pb-32 overflow-y-auto max-h-screen'>
-      {/* Host video area - Responsive with proper aspect ratio */}
+    <div className='flex flex-col w-full'>
+      {/* Host video area - Fixed aspect ratio container */}
       <div
-        className={`relative flex items-center justify-center overflow-hidden border-b-4 flex-shrink-0 ${
+        className={`relative w-full bg-black flex items-center justify-center flex-shrink-0 border-b-4 ${
           isLive ? 'border-twitch-purple' : 'border-slate-200'
         }`}
+        style={{ 
+          aspectRatio: '16/9',
+          maxHeight: '45vh' // Leave more room for scrolling
+        }}
       >
         {localParticipant ? (
-          <div className='relative w-full aspect-video'>
+          <div className='relative w-full h-full flex items-center justify-center'>
             <ParticipantView
               participant={localParticipant}
               trackType={isScreenShareEnabled ? 'screenShareTrack' : 'videoTrack'}
-              className='absolute inset-0 w-full h-full rounded-md overflow-hidden bg-slate-200'
+              className='w-full h-full'
+              ParticipantViewUI={null}
               VideoPlaceholder={() => (
                 <div className='w-full h-full bg-slate-200 flex items-center justify-center text-gray-400'>
                   {isCamEnabled ? 'Camera enabled — waiting for others' : 'Camera off'}
                 </div>
               )}
             />
-            <span className='absolute top-2 left-2 text-xs bg-black/50 text-white px-2 py-1 rounded z-10'>
+            <span className='absolute top-2 left-2 text-xs bg-black/70 text-white px-2 py-1 rounded z-10'>
               You (Host)
             </span>
 
             {/* Picture-in-picture for screen share + camera */}
             {isScreenShareEnabled && isCamEnabled && (
-              <ParticipantView
-                participant={localParticipant}
-                trackType='videoTrack'
-                className='aspect-video w-32 md:w-40 lg:w-48 absolute bottom-4 right-4 rounded-lg overflow-hidden border-2 border-white shadow-lg z-10'
-                VideoPlaceholder={() => (
-                  <div className='w-full h-full bg-slate-300' />
-                )}
-              />
+              <div className='absolute bottom-4 right-4 w-32 md:w-40 lg:w-48 aspect-video z-10'>
+                <ParticipantView
+                  participant={localParticipant}
+                  trackType='videoTrack'
+                  className='w-full h-full rounded-lg overflow-hidden border-2 border-white shadow-lg'
+                  ParticipantViewUI={null}
+                  VideoPlaceholder={() => (
+                    <div className='w-full h-full bg-slate-300' />
+                  )}
+                />
+              </div>
             )}
           </div>
         ) : (
-          <div className='w-full aspect-video flex items-center justify-center bg-slate-200'>
+          <div className='w-full h-full flex items-center justify-center bg-slate-200'>
             Initializing camera...
           </div>
         )}
@@ -242,7 +250,7 @@ export default function StreamerView({
       </section>
 
       {/* Device selection - Responsive */}
-      <div className='flex flex-col gap-2 p-4 md:p-6 mb-4 flex-shrink-0'>
+      <div className='flex flex-col gap-2 p-4 md:p-6 pb-24 md:pb-8 flex-shrink-0'>
         <h2 className='text-lg font-semibold'>Select camera</h2>
         <div className='flex gap-2 flex-wrap'>
           {deviceList.map((device, index) => (
@@ -274,6 +282,16 @@ export default function StreamerView({
           onCancel={() => setShowGoLiveForm(false)}
         />
       )}
+      
+      {/* Add custom CSS to ensure video fills properly */}
+      <style jsx global>{`
+        .str-video__participant-view video,
+        .str-video__video {
+          object-fit: contain !important;
+          width: 100% !important;
+          height: 100% !important;
+        }
+      `}</style>
     </div>
   );
 }
