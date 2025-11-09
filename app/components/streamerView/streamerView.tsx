@@ -45,14 +45,12 @@ export default function StreamerView({
 
   const participantCount = useParticipantCount();
   const isLive = useIsCallLive();
-  const participants = useParticipants(); // remote participants
-  const localParticipant = useLocalParticipant(); // 👈 Host (you)
+  const participants = useParticipants();
+  const localParticipant = useLocalParticipant();
   const { deviceList, selectedDeviceInfo } = useDeviceList(
     devices,
     selectedDevice
   );
-
-  console.log('Camera enabled:', isCamEnabled);
 
   // Fetch current user info from DB
   useEffect(() => {
@@ -79,7 +77,6 @@ export default function StreamerView({
     };
 
     initCameraOnce();
-    // Run only once on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -95,55 +92,56 @@ export default function StreamerView({
     window.addEventListener('beforeunload', handleUnload);
     return () => {
       window.removeEventListener('beforeunload', handleUnload);
-      handleUnload(); // disable on unmount too
+      handleUnload();
     };
   }, [isLive, isCamEnabled, isMicEnabled, camera, microphone]);
 
   return (
-    <div className='flex flex-col gap-2 relative'>
-      {/* Host video area */}
+    <div className='flex flex-col gap-2 w-full min-h-full pb-32 overflow-y-auto max-h-screen'>
+      {/* Host video area - Responsive with proper aspect ratio */}
       <div
-        className={`relative flex items-center justify-center max-h-[500px] overflow-hidden border-b-4 ${
+        className={`relative flex items-center justify-center overflow-hidden border-b-4 flex-shrink-0 ${
           isLive ? 'border-twitch-purple' : 'border-slate-200'
         }`}
       >
         {localParticipant ? (
-          <div className='relative'>
+          <div className='relative w-full aspect-video'>
             <ParticipantView
               participant={localParticipant}
               trackType={isScreenShareEnabled ? 'screenShareTrack' : 'videoTrack'}
-              className='h-[500px] aspect-video rounded-md overflow-hidden bg-slate-200'
+              className='absolute inset-0 w-full h-full rounded-md overflow-hidden bg-slate-200'
               VideoPlaceholder={() => (
-                <div className='h-[500px] aspect-video bg-slate-200 flex items-center justify-center text-gray-400'>
+                <div className='w-full h-full bg-slate-200 flex items-center justify-center text-gray-400'>
                   {isCamEnabled ? 'Camera enabled — waiting for others' : 'Camera off'}
                 </div>
               )}
             />
-            <span className='absolute top-2 left-2 text-xs bg-black/50 text-white px-2 py-1 rounded'>
+            <span className='absolute top-2 left-2 text-xs bg-black/50 text-white px-2 py-1 rounded z-10'>
               You (Host)
             </span>
 
+            {/* Picture-in-picture for screen share + camera */}
             {isScreenShareEnabled && isCamEnabled && (
               <ParticipantView
                 participant={localParticipant}
                 trackType='videoTrack'
-                className='aspect-video h-32 absolute bottom-4 right-4 rounded-lg overflow-hidden border border-white shadow-lg'
+                className='aspect-video w-32 md:w-40 lg:w-48 absolute bottom-4 right-4 rounded-lg overflow-hidden border-2 border-white shadow-lg z-10'
                 VideoPlaceholder={() => (
-                  <div className='h-32 w-48 bg-slate-300' />
+                  <div className='w-full h-full bg-slate-300' />
                 )}
               />
             )}
           </div>
         ) : (
-          <div className='h-[500px] flex items-center justify-center bg-slate-200'>
+          <div className='w-full aspect-video flex items-center justify-center bg-slate-200'>
             Initializing camera...
           </div>
         )}
       </div>
 
-      {/* Controls */}
-      <div className='flex gap-4 p-6'>
-        <div className='flex items-center'>
+      {/* Controls - Responsive */}
+      <div className='flex flex-wrap gap-3 p-4 md:p-6 flex-shrink-0'>
+        <div className='flex items-center gap-2'>
           <User />
           <span>{participantCount}</span>
         </div>
@@ -152,10 +150,8 @@ export default function StreamerView({
           variant='primary'
           onClick={async () => {
             if (isLive) {
-              // Stop stream
               call.stopLive();
 
-              // Remove from DB
               if (currentUserName) {
                 try {
                   const success = await deleteLivestream(currentUserName);
@@ -176,22 +172,28 @@ export default function StreamerView({
           {isLive ? 'Stop Live' : 'Go Live'}
         </Button>
 
-        <Button variant='secondary' onClick={() => camera.toggle()}>
+        <Button 
+          variant='secondary' 
+          onClick={() => camera.toggle()}
+        >
           {isCamEnabled ? 'Disable camera' : 'Enable camera'}
         </Button>
 
-        <Button variant='secondary' onClick={() => microphone.toggle()}>
+        <Button 
+          variant='secondary' 
+          onClick={() => microphone.toggle()}
+        >
           {isMicEnabled ? 'Mute Mic' : 'Unmute Mic'}
         </Button>
       </div>
 
-      {/* Share options */}
-      <section className='p-6 space-y-2'>
+      {/* Share options - Responsive */}
+      <section className='p-4 md:p-6 space-y-2 flex-shrink-0'>
         <h2 className='text-xl font-semibold'>What do you want to share?</h2>
         <p className='text-sm text-secondary'>
           You can share your camera, screen, or both.
         </p>
-        <div className='flex gap-2'>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-2'>
           <Button
             className={`border-2 ${
               isCamEnabled && !isScreenShareEnabled
@@ -239,8 +241,8 @@ export default function StreamerView({
         </div>
       </section>
 
-      {/* Device selection */}
-      <div className='flex flex-col gap-2 p-6'>
+      {/* Device selection - Responsive */}
+      <div className='flex flex-col gap-2 p-4 md:p-6 mb-4 flex-shrink-0'>
         <h2 className='text-lg font-semibold'>Select camera</h2>
         <div className='flex gap-2 flex-wrap'>
           {deviceList.map((device, index) => (
