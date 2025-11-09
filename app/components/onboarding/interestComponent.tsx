@@ -1,39 +1,79 @@
 import { colorForInterest } from '@/lib/types/interests';
-import React from 'react'
+import React from 'react';
 
 const InterestComponent = ({
-    interest,
-    selected = true
-} : {
-    interest: string;
-    selected?: boolean
+  interest,
+  selected = true,
+}: {
+  interest: string;
+  selected?: boolean;
 }) => {
-    const numberOfTextElements = 11;
-return (
-  <div
-    className={`w-full min-w-20 aspect-[2/3] flex flex-col items-center justify-center overflow-hidden relative border-8 ${
-      selected ? 'border-golivehub-purple' : 'border-transparent'
-    }`}
-    style={{ backgroundColor: colorForInterest(interest) }}
-  >
-    {[...Array(numberOfTextElements)].map((_, i) => (
-      <p
-        key={i}
-        className="text-center text-lg tracking-widest mix-blend-luminosity"
-        style = {{
-            opacity: getOpacity(i)
-        }}
-      >
-        {interest}
-      </p>
-    ))}
-  </div>
-)
+  const numberOfTextElements = 11;
 
+  return (
+    <div
+      className={`group relative w-full min-w-24 aspect-[2/3] flex flex-col items-center justify-center overflow-hidden rounded-xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 cursor-pointer ${
+        selected
+          ? 'ring-4 ring-golivehub-purple ring-offset-2 ring-offset-white dark:ring-offset-gray-900'
+          : 'ring-2 ring-gray-200 dark:ring-gray-700 hover:ring-gray-300 dark:hover:ring-gray-600'
+      }`}
+      style={{ backgroundColor: colorForInterest(interest) }}
+    >
+      {/* Gradient overlay for depth */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-black/20 pointer-events-none" />
+      
+      {/* Shine effect on hover */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none transform -translate-x-full group-hover:translate-x-full" 
+           style={{ transition: 'transform 0.8s ease-in-out, opacity 0.5s' }} />
+
+      {/* Text layers with opacity gradient */}
+      <div className="relative z-10 flex flex-col items-center justify-center w-full h-full">
+        {[...Array(numberOfTextElements)].map((_, i) => (
+          <p
+            key={i}
+            className="text-center text-base sm:text-lg font-bold tracking-widest mix-blend-overlay select-none transition-all duration-300 group-hover:tracking-wider"
+            style={{
+              opacity: getOpacity(i),
+              textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            }}
+          >
+            {interest}
+          </p>
+        ))}
+      </div>
+
+      {/* Bottom label with background */}
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent backdrop-blur-sm p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <p className="text-white text-xs font-semibold text-center drop-shadow-lg">
+          {interest}
+        </p>
+      </div>
+
+      {/* Selection checkmark */}
+      {selected && (
+        <div className="absolute top-2 right-2 w-6 h-6 bg-golivehub-purple rounded-full flex items-center justify-center shadow-lg animate-scale-in">
+          <svg
+            className="w-4 h-4 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={3}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </div>
+      )}
+    </div>
+  );
 
   function getOpacity(index: number): number {
     const middleIndex = Math.floor(numberOfTextElements / 2);
-    return 1 - (Math.abs(index - middleIndex)*1.9)/middleIndex;
+    return 1 - (Math.abs(index - middleIndex) * 1.9) / middleIndex;
   }
-}
- export default InterestComponent;
+};
+
+export default InterestComponent;

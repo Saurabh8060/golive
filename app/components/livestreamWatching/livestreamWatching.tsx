@@ -5,7 +5,6 @@ import {
   useCall,
   useCallStateHooks,
 } from '@stream-io/video-react-sdk';
-import { useEffect } from 'react';
 
 export default function LivestreamWatching() {
   const call = useCall();
@@ -13,9 +12,8 @@ export default function LivestreamWatching() {
   const isLive = useIsCallLive();
 
   return (
-    <div className='aspect-video max-h-[500px] overflow-hidden'>
+    <div className='w-full h-full'>
       {isLive && call?.id && (
-        <>
         <LivestreamLayout
           muted={false}
           enableFullScreen={true}
@@ -33,7 +31,6 @@ export default function LivestreamWatching() {
             position: 'bottom-right',
           }}
         />
-        </>
       )}
     </div>
   );
