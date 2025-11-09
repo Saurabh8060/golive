@@ -142,11 +142,11 @@ const { session } = useSession();
       const { data, error } = await supabase
         .from("users")
         .insert({
-          user_id: userName,
+          user_id: userId,
           image_url: imageUrl,
           mail: mail,
           date_of_birth: dateOfBirth,
-          user_name: userId,
+          user_name: userName,
           following: [],
           followers: [],
           interests: [],
