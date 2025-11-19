@@ -6,6 +6,7 @@ import { EllipsisVertical } from '../icons';
 import SearchBar from './searchBar';
 import TrailingItems from './trailingItems';
 import { Button } from '../button/button';
+import { SignedIn } from '@clerk/nextjs';
 
 export default function NavigationBar() {
   return (
@@ -24,11 +25,11 @@ export default function NavigationBar() {
             <TrailingItems />
           </div>
         </div>
-
+<SignedIn>
         <div className='w-full sm:flex-1 sm:max-w-md md:max-w-lg'>
           <SearchBar />
         </div>
-
+</SignedIn>
         <div className='hidden sm:block'>
           <TrailingItems />
         </div>
