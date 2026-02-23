@@ -20,13 +20,13 @@ export default function MyChat({
   userName,
   isStreamer,
   setChatExpanded,
-  channelId, // ✅ Add channelId prop - this should be the livestream ID
+  channelId, 
 }: {
   userId: string;
   userName: string;
   isStreamer: boolean;
   setChatExpanded?: (expanded: boolean) => void;
-  channelId: string; // ✅ Shared channel ID for all users watching this stream
+  channelId: string;
 }) {
   const [client, setClient] = useState<any>();
   const [channel, setChannel] = useState<any>();
@@ -62,7 +62,7 @@ export default function MyChat({
         return;
       }
       
-      // ✅ Validate channelId
+      // Validate channelId
       if (!channelId || typeof channelId !== 'string') {
         console.error('[MyChat] Invalid channelId:', channelId);
         return;
@@ -71,10 +71,9 @@ export default function MyChat({
       try {
         console.log('[MyChat] Creating/joining channel:', channelId);
         
-        // ✅ Create channel with explicit ID and created_by
         const chatChannel = client.channel('livestream', channelId, {
           name: `${channelId}'s Stream`,
-          created_by_id: userId, // Specify creator
+          created_by_id: userId, 
         });
         
         // Get or create the channel
@@ -97,7 +96,7 @@ export default function MyChat({
     if (!channel) {
       createChannel();
     }
-  }, [client, userName, userId, channel, channelId]); // ✅ Add channelId to dependencies
+  }, [client, userName, userId, channel, channelId]); 
 
   const submitHandler: MessageInputProps['overrideSubmitHandler'] = useCallback(
     async (params: any) => {
