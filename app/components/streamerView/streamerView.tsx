@@ -13,6 +13,28 @@ import { useState, useEffect } from 'react';
 import GoLiveForm from './goLiveForm';
 import { useSession } from '@clerk/nextjs';
 
+const inferCameraDirection = (
+  label?: string
+): 'front' | 'back' | undefined => {
+  if (!label) return undefined;
+  const normalized = label.toLowerCase();
+  if (
+    normalized.includes('back') ||
+    normalized.includes('rear') ||
+    normalized.includes('environment')
+  ) {
+    return 'back';
+  }
+  if (
+    normalized.includes('front') ||
+    normalized.includes('user') ||
+    normalized.includes('face')
+  ) {
+    return 'front';
+  }
+  return undefined;
+};
+
 export default function StreamerView({
   call,
   chatExpanded,
@@ -51,6 +73,28 @@ export default function StreamerView({
     devices,
     selectedDevice
   );
+
+  const switchCameraForBroadcast = async (device: {
+    deviceId: string;
+    label: string;
+  }) => {
+    const direction = inferCameraDirection(device.label);
+    const wasEnabled = isCamEnabled;
+
+    if (wasEnabled) {
+      await camera.disable({ forceStop: true });
+    }
+
+    if (direction) {
+      await camera.selectDirection(direction);
+    } else {
+      await camera.select(device.deviceId);
+    }
+
+    if (wasEnabled) {
+      await camera.enable();
+    }
+  };
 
   // Fetch current user info from DB
   useEffect(() => {
@@ -263,7 +307,7 @@ export default function StreamerView({
               variant='secondary'
               key={`${device.deviceId}-${index}`}
               onClick={async () => {
-                await camera.select(device.deviceId);
+                await switchCameraForBroadcast(device);
               }}
             >
               {device.label}

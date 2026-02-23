@@ -1,11 +1,10 @@
 import { Tables } from "@/database/database.types";
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React from "react";
 import Badge from "./badge";
 import { categories } from "@/lib/types/category";
 import Sample_Stream_Image from '../../../public/sample-image.png';
-import { useDatabase } from "@/contexts/databaseContext";
 import { useSession } from "@clerk/nextjs";
 
 const HomeFeed = ({
@@ -14,6 +13,7 @@ const HomeFeed = ({
   livestreams: Tables<"livestreams">[];
 }) => {
   const { session } = useSession();
+  const router = useRouter();
 
   return (
     <div className="bg-white w-full h-full text-gray-400 overflow-y-scroll">
@@ -28,9 +28,9 @@ const HomeFeed = ({
               onClick={() => {
                 console.log("redirecting to /app/", livestream.user_id);
                 if(session?.user.id == livestream?.user_id){
-                  redirect(`/app/dashboard`)
+                  router.push('/app/dashboard')
                 }else{
-                  redirect(`/app/${livestream.user_id}`);
+                  router.push(`/app/${livestream.user_id}`);
                 }
 
                 

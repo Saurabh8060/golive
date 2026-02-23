@@ -86,23 +86,7 @@ const Onboarding = () => {
                                 className = 'w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus: ring-2 focus: ring-purple-500'
                                 />
                     </div>
-                    {/* <div>
-                        <label
-                        htmlFor = 'profileImageUrl'
-                        className = 'block text-sm font-medium mb-1'
-                        >
-                            Profile Image URL
-                        </label>
-                        <input
-                            type = 'url'
-                            id = 'profileImageUrl'
-                            name = 'profileImageUrl'
-                            value = {form.profileImageUrl}
-                            onChange = {handleChange}
-                            required
-                            className = 'w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus: ring-2 focus: ring-purple-500'
-                            />
-                    </div> */}
+
                     <div>
                         <label htmlFor='mail' className = 'block text-sm font-medium mb-1'>
                             Email

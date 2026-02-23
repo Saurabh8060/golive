@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import React from 'react'
 import { Button } from '../components/button/button';
 import logo from '@/app/golivehub-purple.svg';
-const page = () => {
+const Page = () => {
   const {isSignedIn} = useUser();
 
   if(isSignedIn){
@@ -18,10 +18,10 @@ const page = () => {
         <h1 className = 'text-2xl font-bold'>Before accessing out app...</h1>
         <div className = 'flex items-center gap-8'>
           <SignedOut>
-            <SignInButton>
+            <SignInButton forceRedirectUrl="/app">
               <Button variant = {'secondary'}>Log In</Button>
             </SignInButton>
-            <SignUpButton>
+            <SignUpButton forceRedirectUrl="/app">
               <Button variant = {'primary'}>Sign Up</Button>
               </SignUpButton>
           </SignedOut>
@@ -31,4 +31,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

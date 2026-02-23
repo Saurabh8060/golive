@@ -51,6 +51,18 @@ export default function GoLiveForm({ onGoLive, onCancel, call }: GoLiveFormProps
         throw new Error('User ID not found');
       }
 
+      const callState = await call.get();
+      const sameUserSessions =
+        callState.call.session?.participants.filter(
+          (participant) => participant.user.id === userId
+        ) ?? [];
+      if (sameUserSessions.length > 1) {
+        alert(
+          'You are connected from another device. Close the other host session before going live.'
+        );
+        return;
+      }
+
       const userData = await getUserData(userId);
       if (!userData) {
         throw new Error('User data not found');

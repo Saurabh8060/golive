@@ -48,24 +48,55 @@ export default function UserPage({
 
   // 🎥 Join livestream
   useEffect(() => {
+    let isCancelled = false;
+    let joinedCall: Call | null = null;
+
     const joinCall = async () => {
       if (!streamClient || !user) return;
 
       try {
-        const call = streamClient.call('livestream', user);
-        await call.get();
-        await call.join();
-        console.log('[Viewer] Joined call:', call.id);
-        setCall(call);
+        const viewerCall = streamClient.call('livestream', user);
+        joinedCall = viewerCall;
+        await viewerCall.get();
+        await viewerCall.join();
+
+        if (isCancelled) {
+          await viewerCall.leave().catch(() => undefined);
+          return;
+        }
+
+        console.log('[Viewer] Joined call:', viewerCall.id);
+        setCall(viewerCall);
       } catch (error) {
         console.log('[UserPage] Failed to join livestream:', error);
       } finally {
-        setIsLoading(false);
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
       }
     };
 
-    joinCall();
+    void joinCall();
+
+    return () => {
+      isCancelled = true;
+      if (joinedCall) {
+        void joinedCall.leave().catch((error) => {
+          console.log('[UserPage] Failed to leave livestream:', error);
+        });
+      }
+    };
   }, [streamClient, user]);
+
+  useEffect(() => {
+    return () => {
+      if (streamClient) {
+        void streamClient.disconnectUser().catch((error) => {
+          console.log('[UserPage] Failed to disconnect Stream client:', error);
+        });
+      }
+    };
+  }, [streamClient]);
 
   // 🌐 Initialize Stream client
   useEffect(() => {

@@ -79,6 +79,21 @@ const Dashboard = () => {
 
         const streamCall = streamClient.call("livestream", callId);
         await streamCall.join({ create: true });
+
+        const refreshedCall = await streamCall.get();
+        const sameUserSessions =
+          refreshedCall.call.session?.participants.filter(
+            (participant) => participant.user.id === userId
+          ) ?? [];
+
+        if (sameUserSessions.length > 1) {
+          await streamCall.leave();
+          setError(
+            "This account is already connected from another device. Close that host session first."
+          );
+          setIsLoading(false);
+          return;
+        }
         
         setClient(streamClient);
         setCall(streamCall);
