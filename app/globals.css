@@ -44,3 +44,42 @@ html, body {
   padding: 0;
   overflow-x: hidden;
 }
+
+.live-chat-root .str-chat,
+.live-chat-root .str-chat__container,
+.live-chat-root .str-chat__channel,
+.live-chat-root .str-chat__main-panel,
+.live-chat-root .str-chat__main-panel-inner {
+  height: 100%;
+}
+
+.live-chat-root .str-chat,
+.live-chat-root .str-chat__container,
+.live-chat-root .str-chat__channel,
+.live-chat-root .str-chat__main-panel,
+.live-chat-root .str-chat__main-panel-inner {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.live-chat-root .str-chat__window {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+}
+
+.live-chat-root .str-chat__list,
+.live-chat-root .str-chat__message-list-scroll,
+.live-chat-root .stream-chat__paginated-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.live-chat-root .str-chat__message-input {
+  flex-shrink: 0;
+}

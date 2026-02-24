@@ -39,10 +39,12 @@ export default function StreamerView({
   call,
   chatExpanded,
   setChatExpanded,
+  onChatSessionChange,
 }: {
   call: Call;
   chatExpanded: boolean;
   setChatExpanded: (expanded: boolean) => void;
+  onChatSessionChange: (chatChannelId: string | null) => void;
 }) {
   const [showGoLiveForm, setShowGoLiveForm] = useState(false);
   const [currentUserName, setCurrentUserName] = useState<string | null>(null);
@@ -203,6 +205,7 @@ export default function StreamerView({
           onClick={async () => {
             if (isLive) {
               call.stopLive();
+              onChatSessionChange(null);
 
               if (currentUserName) {
                 try {
@@ -320,7 +323,8 @@ export default function StreamerView({
       {showGoLiveForm && (
         <GoLiveForm
           call={call}  
-          onGoLive={() => {
+          onGoLive={(chatChannelId) => {
+            onChatSessionChange(chatChannelId);
             setShowGoLiveForm(false);
           }}
           onCancel={() => setShowGoLiveForm(false)}
