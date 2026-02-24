@@ -6,11 +6,6 @@ import {
   Chat,
   MessageList,
 } from 'stream-chat-react';
-import {
-  StreamChat,
-  type Channel as StreamChatChannel,
-  type DefaultGenerics,
-} from 'stream-chat';
 
 import { createTokenProvider } from '@/lib/streamClient';
 import 'stream-chat-react/dist/css/v2/index.css';
@@ -27,8 +22,8 @@ export default function MyChat({
   isStreamer: boolean;
   channelId: string;
 }) {
-  const [client, setClient] = useState<StreamChat<DefaultGenerics> | null>(null);
-  const [channel, setChannel] = useState<StreamChatChannel<DefaultGenerics> | null>(null);
+  const [client, setClient] = useState<any>(null);
+  const [channel, setChannel] = useState<any>(null);
   const [customColor, setCustomColor] = useState<string | undefined>();
   const [chatError, setChatError] = useState<string | null>(null);
   const [messageText, setMessageText] = useState('');
@@ -36,7 +31,7 @@ export default function MyChat({
 
   useEffect(() => {
     let isCancelled = false;
-    let initializedClient: StreamChat<DefaultGenerics> | null = null;
+    let initializedClient: any = null;
 
     const initializeChatClient = async () => {
       const apiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY;
@@ -50,6 +45,8 @@ export default function MyChat({
       setChatError(null);
       setChannel(null);
 
+      const streamChatModule = await import('stream-chat');
+      const StreamChat = (streamChatModule as any).StreamChat || streamChatModule;
       const nextClient = new StreamChat(apiKey);
       initializedClient = nextClient;
       try {
