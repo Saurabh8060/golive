@@ -151,7 +151,8 @@ export default function StreamerView({
         }`}
         style={{ 
           aspectRatio: '16/9',
-          maxHeight: '45vh' // Leave more room for scrolling
+          minHeight: '320px',
+          maxHeight: '72vh'
         }}
       >
         {localParticipant ? (
