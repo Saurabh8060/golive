@@ -36,9 +36,10 @@ export default function UserPage({
   );
 
   const [call, setCall] = useState<Call | null>(null);
+  const [chatChannelId, setChatChannelId] = useState<string | null>(null);
   const { session } = useSession();
 
-  const { supabase, getUserData, setSupabaseClient, followUser } = useDatabase();
+  const { supabase, getUserData, setSupabaseClient, followUser, getLivestreams } = useDatabase();
 
   const [isLoading, setIsLoading] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
@@ -52,13 +53,16 @@ export default function UserPage({
     let joinedCall: Call | null = null;
 
     const joinCall = async () => {
-      if (!streamClient || !user) return;
+      if (!streamClient || !user || !supabase) return;
 
       try {
         const viewerCall = streamClient.call('livestream', user);
         joinedCall = viewerCall;
-        await viewerCall.get();
         await viewerCall.join();
+        const livestreams = await getLivestreams();
+        const activeLivestream = livestreams.find(
+          (livestream) => livestream.user_id === user
+        );
 
         if (isCancelled) {
           await viewerCall.leave().catch(() => undefined);
@@ -67,6 +71,7 @@ export default function UserPage({
 
         console.log('[Viewer] Joined call:', viewerCall.id);
         setCall(viewerCall);
+        setChatChannelId(activeLivestream?.id ?? null);
       } catch (error) {
         console.log('[UserPage] Failed to join livestream:', error);
       } finally {
@@ -86,17 +91,7 @@ export default function UserPage({
         });
       }
     };
-  }, [streamClient, user]);
-
-  useEffect(() => {
-    return () => {
-      if (streamClient) {
-        void streamClient.disconnectUser().catch((error) => {
-          console.log('[UserPage] Failed to disconnect Stream client:', error);
-        });
-      }
-    };
-  }, [streamClient]);
+  }, [streamClient, user, supabase, getLivestreams]);
 
   // 🌐 Initialize Stream client
   useEffect(() => {
@@ -254,12 +249,12 @@ export default function UserPage({
               </button>
             </div>
             <div className="flex-1 overflow-hidden">
-              {session?.user.id && streamerData && (
+              {session?.user.id && streamerData && chatChannelId && (
                 <MyChat
                   userId={session.user.id}
                   userName={session?.user?.fullName || 'User'}
                   isStreamer={false}
-                  channelId={streamerData.user_id}
+                  channelId={chatChannelId}
                 />
               )}
             </div>
@@ -450,12 +445,12 @@ export default function UserPage({
 
         {/* Right side: Chat - Desktop Only */}
         <aside className="hidden lg:block border-l border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 h-full">
-          {session?.user.id && streamerData && (
+          {session?.user.id && streamerData && chatChannelId && (
             <MyChat
               userId={session.user.id}
               userName={session?.user?.fullName || 'User'}
               isStreamer={false}
-              channelId={streamerData.user_id}
+              channelId={chatChannelId}
             />
           )}
         </aside>

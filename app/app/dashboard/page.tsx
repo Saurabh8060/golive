@@ -20,14 +20,17 @@ const Dashboard = () => {
   const [client, setClient] = useState<StreamVideoClient | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [call, setCall] = useState<Call | null>(null);
+  const [chatChannelId, setChatChannelId] = useState<string | null>(null);
   const [chatExpanded, setChatExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
   const { session } = useSession();
-  const { supabase, getUserData, setSupabaseClient } = useDatabase();
+  const { supabase, getUserData, setSupabaseClient, getLivestreams } = useDatabase();
 
   useEffect(() => {
+    let isCancelled = false;
+
     const enterCall = async () => {
       try {
         setIsLoading(true);
@@ -79,24 +82,19 @@ const Dashboard = () => {
 
         const streamCall = streamClient.call("livestream", callId);
         await streamCall.join({ create: true });
+        const livestreams = await getLivestreams();
+        const activeLivestream = livestreams.find(
+          (livestream) => livestream.user_id === callId
+        );
 
-        const refreshedCall = await streamCall.get();
-        const sameUserSessions =
-          refreshedCall.call.session?.participants.filter(
-            (participant) => participant.user.id === userId
-          ) ?? [];
-
-        if (sameUserSessions.length > 1) {
+        if (isCancelled) {
           await streamCall.leave();
-          setError(
-            "This account is already connected from another device. Close that host session first."
-          );
-          setIsLoading(false);
           return;
         }
         
         setClient(streamClient);
         setCall(streamCall);
+        setChatChannelId(activeLivestream?.id ?? null);
         setUserName(userData.user_id);
         setIsLoading(false);
       } catch (err) {
@@ -107,12 +105,24 @@ const Dashboard = () => {
     };
 
     enterCall();
-  }, [session, getUserData, supabase, setSupabaseClient, client, call]);
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [session, getUserData, supabase, setSupabaseClient, client, call, getLivestreams]);
+
+  useEffect(() => {
+    return () => {
+      if (call) {
+        void call.leave();
+      }
+    };
+  }, [call]);
 
   // Loading state
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      <div className="flex items-center justify-center h-full bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
         <div className="text-center space-y-4">
           <Loader2 className="w-12 h-12 animate-spin text-blue-500 mx-auto" />
           <p className="text-gray-300 text-lg font-medium">Setting up your stream...</p>
@@ -124,7 +134,7 @@ const Dashboard = () => {
   // Error state
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4">
+      <div className="flex items-center justify-center h-full bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4">
         <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-6 max-w-md text-center">
           <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-6 h-6 text-red-500" />
@@ -143,7 +153,7 @@ const Dashboard = () => {
   }
 
   return (
-    <section className="h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
+    <section className="h-full bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
       <div className="grid lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_450px] h-full">
         {/* Main Stream View - Scrollable on mobile */}
         <div className="relative h-full overflow-y-auto overflow-x-hidden">
@@ -155,6 +165,7 @@ const Dashboard = () => {
                     call={call} 
                     chatExpanded={chatExpanded} 
                     setChatExpanded={setChatExpanded}
+                    onChatSessionChange={setChatChannelId}
                   />
                 </StreamCall>
               </StreamVideo>
@@ -174,7 +185,7 @@ const Dashboard = () => {
         </div>
 
         {/* Chat Panel - Desktop only (always visible), Mobile (slide in from right) */}
-        {session?.user && userName && (
+        {session?.user && userName && chatChannelId && (
           <div className={`
             fixed lg:relative top-0 right-0 bottom-0
             w-full max-w-md lg:max-w-none
@@ -212,8 +223,7 @@ const Dashboard = () => {
                 userId={session.user.id}
                 isStreamer={true}
                 userName={session.user.fullName || 'User'}
-                setChatExpanded={setChatExpanded}
-                channelId={session.user.id}
+                channelId={chatChannelId}
               />
             </div>
           </div>

@@ -8,7 +8,7 @@ import { categories } from '@/lib/types/category';
 import { Call } from '@stream-io/video-client';
 
 interface GoLiveFormProps {
-  onGoLive: () => void;
+  onGoLive: (chatChannelId: string) => void;
   onCancel: () => void;
   call: Call;
 }
@@ -20,7 +20,7 @@ export default function GoLiveForm({ onGoLive, onCancel, call }: GoLiveFormProps
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { session } = useSession();
-  const { createLivestream, getUserData } = useDatabase();
+  const { createLivestream, getUserData, deleteLivestream } = useDatabase();
 
   const handleCategoryToggle = (category: string) => {
     setSelectedCategories((prev) =>
@@ -68,6 +68,8 @@ export default function GoLiveForm({ onGoLive, onCancel, call }: GoLiveFormProps
         throw new Error('User data not found');
       }
 
+      await deleteLivestream(userData.user_id);
+
       const livestream = await createLivestream(
         streamName.trim(),
         selectedCategories,
@@ -77,8 +79,8 @@ export default function GoLiveForm({ onGoLive, onCancel, call }: GoLiveFormProps
       );
 
       if (livestream) {
-        onGoLive();
-         await call.goLive();
+        await call.goLive();
+        onGoLive(livestream.id);
       } else {
         alert('Failed to create livestream. Please try again.');
       }
