@@ -300,7 +300,7 @@ export default function UserPage({
                     Stream Offline
                   </h1>
                   <p className="text-lg md:text-xl opacity-90 max-w-md mx-auto">
-                    {streamerData?.user_id} is not currently streaming. Check back later!
+                    {streamerData?.user_name || streamerData?.user_id || "This streamer"} isn&apos;t live right now. Check back later.
                   </p>
                 </div>
               </div>

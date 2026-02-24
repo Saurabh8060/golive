@@ -23,6 +23,9 @@ export default function SingleSessionEnforcer() {
 
       inFlightRef.current = true;
       try {
+        // Always refresh client-side session/user state before checking.
+        await Promise.allSettled([user.reload(), session.reload?.()]);
+
         const sessions = await user.getSessions();
         const activeSessions = sessions.filter(
           (existingSession) =>
@@ -89,10 +92,13 @@ export default function SingleSessionEnforcer() {
     };
 
     document.addEventListener('click', eventHandler, true);
+    document.addEventListener('pointerdown', eventHandler, true);
     document.addEventListener('touchstart', eventHandler, true);
     document.addEventListener('keydown', eventHandler, true);
     window.addEventListener('focus', eventHandler);
     window.addEventListener('popstate', eventHandler);
+    window.addEventListener('hashchange', eventHandler);
+    window.addEventListener('pageshow', eventHandler);
     document.addEventListener('visibilitychange', eventHandler);
 
     // Fallback in case user stays idle for a long time.
@@ -102,10 +108,13 @@ export default function SingleSessionEnforcer() {
 
     return () => {
       document.removeEventListener('click', eventHandler, true);
+      document.removeEventListener('pointerdown', eventHandler, true);
       document.removeEventListener('touchstart', eventHandler, true);
       document.removeEventListener('keydown', eventHandler, true);
       window.removeEventListener('focus', eventHandler);
       window.removeEventListener('popstate', eventHandler);
+      window.removeEventListener('hashchange', eventHandler);
+      window.removeEventListener('pageshow', eventHandler);
       document.removeEventListener('visibilitychange', eventHandler);
       window.clearInterval(intervalId);
     };

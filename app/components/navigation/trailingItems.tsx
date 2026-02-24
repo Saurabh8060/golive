@@ -3,50 +3,33 @@
 import React from 'react';
 import Link from 'next/link';
 import { Button } from '../button/button';
-import { Mail, User } from '../icons';
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignOutButton,
-  SignUpButton,
-} from '@clerk/nextjs';
+import { User } from '../icons';
 
 const TrailingItems = () => {
+  const handleSignOut = async () => {
+    const clerk = (window as unknown as { Clerk?: { loaded?: boolean; signOut?: (opts?: { redirectUrl?: string }) => Promise<void> } }).Clerk;
+    if (clerk?.loaded && clerk.signOut) {
+      await clerk.signOut({ redirectUrl: '/login' });
+      return;
+    }
+    window.location.href = '/login';
+  };
+
   return (
     <div className="flex items-center gap-2 h-10">
-
-      {/* When user is signed out */}
-      <SignedOut>
-        <SignInButton>
-          <Button variant="secondary" size="sm">
-            Log In
-          </Button>
-        </SignInButton>
-        <SignUpButton>
-          <Button variant="primary" size="sm">
-            Sign Up
-          </Button>
-        </SignUpButton>
-      </SignedOut>
-
-      {/* When user is signed in */}
-      <SignedIn>
-        <SignOutButton>
-          <Button variant="secondary" size="sm">
-            Log Out
-          </Button>
-        </SignOutButton>
-      </SignedIn>
-
-      {/* Profile/User icon */}
-      <SignedIn>
+      <Link href="/login">
+        <Button variant="secondary" size="sm">
+          Log In
+        </Button>
+      </Link>
+      <Button variant="secondary" size="sm" onClick={handleSignOut}>
+        Log Out
+      </Button>
       <Link href="/app/dashboard">
         <Button variant="icon" size="sm">
           <User /> Go live
         </Button>
       </Link>
-      </SignedIn>
     </div>
   );
 };

@@ -185,7 +185,7 @@ const Dashboard = () => {
         </div>
 
         {/* Chat Panel - Desktop only (always visible), Mobile (slide in from right) */}
-        {session?.user && userName && chatChannelId && (
+        {session?.user && userName && (
           <div className={`
             fixed lg:relative top-0 right-0 bottom-0
             w-full max-w-md lg:max-w-none
@@ -219,12 +219,38 @@ const Dashboard = () => {
 
             {/* Chat Component */}
             <div className="flex-1 overflow-hidden min-h-0">
-              <MyChat
-                userId={session.user.id}
-                isStreamer={true}
-                userName={session.user.fullName || 'User'}
-                channelId={chatChannelId}
-              />
+              {call && !call.state.backstage && chatChannelId ? (
+                <MyChat
+                  userId={session.user.id}
+                  isStreamer={true}
+                  userName={session.user.fullName || 'User'}
+                  channelId={chatChannelId}
+                />
+              ) : (
+                <div className="h-full bg-gray-900 p-6 text-gray-200">
+                  <div className="h-full rounded-xl border border-gray-700 bg-gradient-to-b from-gray-800 to-gray-900 p-6 flex flex-col justify-between">
+                    <div>
+                      <p className="text-xl font-semibold mb-2">Live chat is waiting</p>
+                      <p className="text-sm text-gray-400 mb-6">
+                        Go live to open a fresh chat room for this stream.
+                      </p>
+                      <div className="space-y-3">
+                        <div className="rounded-lg bg-gray-800/70 border border-gray-700 px-4 py-3">
+                          <p className="text-sm font-medium">Viewer messages appear here</p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            Keep this panel open to follow audience questions in real time.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="rounded-lg border border-blue-500/40 bg-blue-500/10 px-4 py-3">
+                      <p className="text-sm text-blue-300">
+                        Tip: Start with camera + mic enabled for faster audience engagement.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
