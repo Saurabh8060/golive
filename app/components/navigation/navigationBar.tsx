@@ -12,7 +12,7 @@ export default async function NavigationBar() {
   const browseHref = isSignedIn ? '/app' : '/';
 
   return (
-    <header>
+    <header className='relative z-[60]'>
       <nav className='w-full flex flex-col sm:flex-row text-black items-center justify-between bg-white p-2 border-b border-slate-300 gap-2'>
         <div className='flex items-center gap-1 w-full sm:w-auto justify-between sm:justify-start'>
           <div className='flex items-center gap-1'>

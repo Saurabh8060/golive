@@ -22,23 +22,40 @@ function Loader() {
 };
 
 export default function AppPage() {
-  const { session } = useSession();
+  const { session, isLoaded: isSessionLoaded } = useSession();
   const {
     supabase,
     setSupabaseClient,
     getUserData,
     getLivestreams,
-    setLivestreamsMockData,
-    removeLivestreamsMockData,
   } = useDatabase();
 
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showSelectInterests, setShowSelectInterests] = useState(false);
   const [livestreams, setLivestreams] = useState<Tables<'livestreams'>[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
+    const isOnboardingFlowVisible = showOnboarding || showSelectInterests;
+    document.body.dataset.onboardingVisible = isOnboardingFlowVisible
+      ? 'true'
+      : 'false';
+
+    window.dispatchEvent(
+      new CustomEvent('onboarding-visibility-changed', {
+        detail: { visible: isOnboardingFlowVisible },
+      })
+    );
+
+    return () => {
+      delete document.body.dataset.onboardingVisible;
+    };
+  }, [showOnboarding, showSelectInterests]);
+
+  useEffect(() => {
+    if (!isSessionLoaded) return;
+
     async function initializeSupabase(session: SignedInSessionResource) {
       const token = (await session?.getToken()) as string;
       if (token) {
@@ -49,18 +66,32 @@ export default function AppPage() {
     if (session && !supabase) {
       initializeSupabase(session);
     }
-  }, [session, setSupabaseClient, supabase]);
+  }, [isSessionLoaded, session, setSupabaseClient, supabase]);
 
   useEffect(() => {
     const loadUserData = async () => {
+      if (!isSessionLoaded) {
+        setLoading(true);
+        return;
+      }
+      if (!session?.user.id) {
+        setLoading(false);
+        return;
+      }
+      if (!supabase) {
+        setLoading(true);
+        return;
+      }
+
       setLoading(true);
-      if (!supabase || !session?.user.id) return;
 
       try {
         const user = await getUserData(session.user.id);
         if (!user) {
           setShowOnboarding(true);
+          setShowSelectInterests(false);
         } else if (user.interests && user.interests.length === 0) {
+          setShowOnboarding(false);
           setShowSelectInterests(true);
         } else {
           const streams = await getLivestreams();
@@ -76,7 +107,7 @@ export default function AppPage() {
     };
 
     loadUserData();
-  }, [supabase, session?.user.id, getUserData, getLivestreams]);
+  }, [isSessionLoaded, supabase, session?.user.id, getUserData, getLivestreams]);
 
   if (loading) {
     return <Loader />;
