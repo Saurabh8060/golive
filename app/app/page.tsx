@@ -3,7 +3,7 @@
 import { SignedInSessionResource } from '@clerk/types';
 import { Tables } from '@/database/database.types';
 import { useDatabase } from '@/contexts/databaseContext';
-import { useSession } from '@clerk/nextjs';
+import { useSession, useUser } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
 import Onboarding from '../components/onboarding/onboarding';
 import SelectInterests from '../components/onboarding/selectInterests';
@@ -23,8 +23,10 @@ function Loader() {
 
 export default function AppPage() {
   const { session, isLoaded: isSessionLoaded } = useSession();
+  const { user } = useUser();
   const {
     supabase,
+    error,
     setSupabaseClient,
     getUserData,
     getLivestreams,
@@ -86,11 +88,20 @@ export default function AppPage() {
       setLoading(true);
 
       try {
-        const user = await getUserData(session.user.id);
-        if (!user) {
-          setShowOnboarding(true);
-          setShowSelectInterests(false);
-        } else if (user.interests && user.interests.length === 0) {
+        let existingUser = await getUserData(session.user.id, 'user_id');
+        if (!existingUser && user?.primaryEmailAddress?.emailAddress) {
+          existingUser = await getUserData(user.primaryEmailAddress.emailAddress, 'mail');
+        }
+
+        if (!existingUser) {
+          if (!error) {
+            setShowOnboarding(true);
+            setShowSelectInterests(false);
+          }
+          return;
+        }
+
+        if (existingUser.interests && existingUser.interests.length === 0) {
           setShowOnboarding(false);
           setShowSelectInterests(true);
         } else {
@@ -107,7 +118,7 @@ export default function AppPage() {
     };
 
     loadUserData();
-  }, [isSessionLoaded, supabase, session?.user.id, getUserData, getLivestreams]);
+  }, [isSessionLoaded, supabase, session?.user.id, user?.primaryEmailAddress?.emailAddress, getUserData, getLivestreams, error]);
 
   if (loading) {
     return <Loader />;

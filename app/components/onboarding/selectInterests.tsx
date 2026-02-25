@@ -1,12 +1,14 @@
 import { useDatabase } from '@/contexts/databaseContext';
 import { Interest, interests } from '@/lib/types/interests';
 import { useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import InterestComponent from './interestComponent';
 
 export default function SelectInterests() {
+  const router = useRouter();
   const [selectedInterests, setSelectedInterests] = useState<Interest[]>([]);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   const { setUserInterests } = useDatabase();
   const { user } = useUser();
@@ -17,8 +19,6 @@ export default function SelectInterests() {
       delete document.body.dataset.skipSessionEnforcer;
     };
   }, []);
-
-  if (!isOpen) return null;
 
   return (
     <section className='fixed inset-0 z-40 flex items-center justify-center bg-twitch-ice bg-opacity-50 p-4'>
@@ -58,25 +58,29 @@ export default function SelectInterests() {
         <div className='border-t border-gray-200 p-3 sm:p-4 flex items-center justify-end bg-white rounded-b-lg'>
           <button
             type='button'
+            disabled={isSaving}
             className={`px-4 sm:px-6 py-2 text-xs sm:text-sm font-semibold cursor-pointer rounded-md transition-colors ${
-              selectedInterests.length === 0
+              selectedInterests.length === 0 || isSaving
                 ? 'bg-gray-300 opacity-50 cursor-not-allowed'
                 : 'bg-purple-500 text-white hover:bg-purple-600'
             }`}
             onClick={async () => {
-              if (selectedInterests.length === 0 || !user?.id) {
+              if (selectedInterests.length === 0 || !user?.id || isSaving) {
                 console.log('No interests selected or user not found');
                 return;
               }
-              await setUserInterests(
+              setIsSaving(true);
+              const updatedUser = await setUserInterests(
                 selectedInterests.map((interest) => interest.name),
                 user.id
               );
-              setIsOpen(false);
-              window.location.reload();
+              setIsSaving(false);
+              if (updatedUser) {
+                router.refresh();
+              }
             }}
           >
-            {selectedInterests.length === 0 ? 'Choose 1 more' : 'Save'}
+            {isSaving ? 'Saving...' : selectedInterests.length === 0 ? 'Choose 1 more' : 'Save'}
           </button>
         </div>
       </div>
