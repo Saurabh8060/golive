@@ -99,6 +99,11 @@ export default function SingleSessionEnforcer() {
     window.addEventListener('hashchange', eventHandler);
     window.addEventListener('pageshow', eventHandler);
     document.addEventListener('visibilitychange', eventHandler);
+    const intervalId = window.setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        void enforceSingleSession();
+      }
+    }, 5000);
 
     return () => {
       window.removeEventListener('focus', eventHandler);
@@ -106,6 +111,7 @@ export default function SingleSessionEnforcer() {
       window.removeEventListener('hashchange', eventHandler);
       window.removeEventListener('pageshow', eventHandler);
       document.removeEventListener('visibilitychange', eventHandler);
+      window.clearInterval(intervalId);
     };
   }, [isSessionLoaded, isSignedIn, isUserLoaded, session, signOut, user]);
 
