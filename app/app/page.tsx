@@ -23,7 +23,7 @@ function Loader() {
 
 export default function AppPage() {
   const { session, isLoaded: isSessionLoaded } = useSession();
-  const { user } = useUser();
+  const { user, isLoaded: isUserLoaded } = useUser();
   const {
     supabase,
     error,
@@ -38,8 +38,10 @@ export default function AppPage() {
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
   useEffect(() => {
-    const isOnboardingFlowVisible = showOnboarding || showSelectInterests;
+    const isOnboardingFlowVisible = loading || showOnboarding || showSelectInterests;
     document.body.dataset.onboardingVisible = isOnboardingFlowVisible
       ? 'true'
       : 'false';
@@ -53,7 +55,7 @@ export default function AppPage() {
     return () => {
       delete document.body.dataset.onboardingVisible;
     };
-  }, [showOnboarding, showSelectInterests]);
+  }, [loading, showOnboarding, showSelectInterests]);
 
   useEffect(() => {
     if (!isSessionLoaded) return;
@@ -72,7 +74,7 @@ export default function AppPage() {
 
   useEffect(() => {
     const loadUserData = async () => {
-      if (!isSessionLoaded) {
+      if (!isSessionLoaded || !isUserLoaded) {
         setLoading(true);
         return;
       }
@@ -88,9 +90,19 @@ export default function AppPage() {
       setLoading(true);
 
       try {
-        let existingUser = await getUserData(session.user.id, 'user_id');
-        if (!existingUser && user?.primaryEmailAddress?.emailAddress) {
-          existingUser = await getUserData(user.primaryEmailAddress.emailAddress, 'mail');
+        let existingUser: Tables<'users'> | null = null;
+
+        for (let attempt = 0; attempt < 3; attempt += 1) {
+          existingUser = await getUserData(session.user.id, 'user_id');
+          if (!existingUser && user?.primaryEmailAddress?.emailAddress) {
+            existingUser = await getUserData(user.primaryEmailAddress.emailAddress, 'mail');
+          }
+
+          if (existingUser || error) {
+            break;
+          }
+
+          await wait(200);
         }
 
         if (!existingUser) {
@@ -118,7 +130,7 @@ export default function AppPage() {
     };
 
     loadUserData();
-  }, [isSessionLoaded, supabase, session?.user.id, user?.primaryEmailAddress?.emailAddress, getUserData, getLivestreams, error]);
+  }, [isSessionLoaded, isUserLoaded, supabase, session?.user.id, user?.primaryEmailAddress?.emailAddress, getUserData, getLivestreams, error]);
 
   if (loading) {
     return <Loader />;

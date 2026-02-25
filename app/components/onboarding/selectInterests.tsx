@@ -1,12 +1,10 @@
 import { useDatabase } from '@/contexts/databaseContext';
 import { Interest, interests } from '@/lib/types/interests';
 import { useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import InterestComponent from './interestComponent';
 
 export default function SelectInterests() {
-  const router = useRouter();
   const [selectedInterests, setSelectedInterests] = useState<Interest[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -76,7 +74,7 @@ export default function SelectInterests() {
               );
               setIsSaving(false);
               if (updatedUser) {
-                router.refresh();
+                window.location.assign('/app');
               }
             }}
           >

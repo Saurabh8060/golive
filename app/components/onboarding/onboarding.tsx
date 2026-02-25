@@ -2,20 +2,20 @@
 
 import { useDatabase } from '@/contexts/databaseContext';
 import { useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react'
 
 const Onboarding = () => {
-    const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
     const [form, setForm] = useState({
         userName: '',
         dateOfBirth: '',
     });
     const {user} = useUser();
-    const {setUserData} = useDatabase();
+    const {setUserData, error} = useDatabase();
     const userMail = user?.emailAddresses[0].emailAddress || '';
     const userImageUrl = user?.imageUrl || '';
+    const today = new Date().toISOString().split('T')[0];
 
     useEffect(() => {
         document.body.dataset.skipSessionEnforcer = 'true';
@@ -53,11 +53,28 @@ const Onboarding = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (isSubmitting) return;
+        if (form.dateOfBirth > today) {
+            setSubmitError('Date of birth cannot be in the future.');
+            return;
+        }
+        setSubmitError(null);
         setIsSubmitting(true);
-        const isSuccess = await submitUserData();
-        setIsSubmitting(false);
-        if (isSuccess) {
-            router.refresh();
+        try {
+            const isSuccess = await submitUserData();
+            if (isSuccess) {
+                window.location.assign('/app');
+                return;
+            }
+            setSubmitError(error || 'Unable to save onboarding details. Please try again.');
+        } catch (submitError) {
+            console.error('Onboarding submit failed', submitError);
+            setSubmitError(
+                submitError instanceof Error
+                    ? submitError.message
+                    : 'Unable to save onboarding details. Please try again.'
+            );
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -112,6 +129,7 @@ const Onboarding = () => {
                             name = 'dateOfBirth'
                             value = {form.dateOfBirth}
                             onChange = {handleChange}
+                            max = {today}
                             required
                             className = 'w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus: ring-2 focus: ring-purple-500'
                             />
@@ -121,6 +139,9 @@ const Onboarding = () => {
                         disabled = {isSubmitting}
                         className = 'w-full bg-purple-600 text-white py-2 rounded font-semibold hover:bg-purple-700 transition disabled:opacity-60 disabled:cursor-not-allowed'
                         >{isSubmitting ? 'Submitting...' : 'Submit'}</button>
+                    {submitError && (
+                        <p className='text-sm text-red-600'>{submitError}</p>
+                    )}
                 </form>
         </div>
       
