@@ -153,10 +153,10 @@ const Dashboard = () => {
   }
 
   return (
-    <section className="h-full bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
-      <div className="grid lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_450px] h-full">
+    <section className="min-h-screen lg:h-full bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-y-auto lg:overflow-hidden">
+      <div className="min-h-screen lg:h-full grid lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_450px]">
         {/* Main Stream View - Scrollable on mobile */}
-        <div className="relative h-full overflow-y-auto overflow-x-hidden">
+        <div className="relative min-h-screen lg:h-full overflow-y-auto overflow-x-hidden">
           {client && call && (
             <StreamTheme>
               <StreamVideo client={client}>
