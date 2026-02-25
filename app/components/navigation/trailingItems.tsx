@@ -1,11 +1,29 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '../button/button';
+import { SignInButton } from '@clerk/nextjs';
 import { User } from '../icons';
 
 const TrailingItems = ({ isSignedIn }: { isSignedIn: boolean }) => {
+  const [isOnboardingVisible, setIsOnboardingVisible] = useState(() => {
+    if (typeof document === 'undefined') return false;
+    return document.body.dataset.onboardingVisible === 'true';
+  });
+
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const customEvent = event as CustomEvent<{ visible?: boolean }>;
+      setIsOnboardingVisible(Boolean(customEvent.detail?.visible));
+    };
+
+    window.addEventListener('onboarding-visibility-changed', handler);
+    return () => {
+      window.removeEventListener('onboarding-visibility-changed', handler);
+    };
+  }, []);
+
   const handleSignOut = async () => {
     const clerk = (window as unknown as { Clerk?: { loaded?: boolean; signOut?: (opts?: { redirectUrl?: string }) => Promise<void> } }).Clerk;
     if (clerk?.loaded && clerk.signOut) {
@@ -18,21 +36,23 @@ const TrailingItems = ({ isSignedIn }: { isSignedIn: boolean }) => {
   return (
     <div className="flex items-center gap-2 h-10">
       {!isSignedIn ? (
-        <Link href="/login">
+        <SignInButton forceRedirectUrl="/app">
           <Button variant="secondary" size="sm">
             Log In
           </Button>
-        </Link>
+        </SignInButton>
       ) : (
         <>
           <Button variant="secondary" size="sm" onClick={handleSignOut}>
             Log Out
           </Button>
-          <Link href="/app/dashboard">
-            <Button variant="icon" size="sm">
-              <User /> Go live
-            </Button>
-          </Link>
+          {!isOnboardingVisible && (
+            <Link href="/app/dashboard">
+              <Button variant="icon" size="sm">
+                <User /> Go live
+              </Button>
+            </Link>
+          )}
         </>
       )}
     </div>

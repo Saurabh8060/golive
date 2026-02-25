@@ -6,24 +6,22 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 const Onboarding = () => {
     const [isOpen, setIsOpen] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [form, setForm] = useState({
         userName: '',
-        profileImageUrl: '',
-        mail: '',
         dateOfBirth: '',
     });
     const {user} = useUser();
-    const {setUserData, error} = useDatabase();
+    const {setUserData} = useDatabase();
+    const userMail = user?.emailAddresses[0].emailAddress || '';
+    const userImageUrl = user?.imageUrl || '';
 
     useEffect(() => {
-        const email = user?.emailAddresses[0].emailAddress;
-        if(email && form.mail === ''){
-            setForm({
-                ...form,
-                mail: email,
-            })
-        }
-    }, [user, form]);
+        document.body.dataset.skipSessionEnforcer = 'true';
+        return () => {
+            delete document.body.dataset.skipSessionEnforcer;
+        };
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
@@ -37,8 +35,8 @@ const Onboarding = () => {
         }
         const result = await setUserData(
             form.userName,
-            form.profileImageUrl,
-            form.mail,
+            userImageUrl,
+            userMail,
             form.dateOfBirth,
             userId
         );
@@ -48,18 +46,21 @@ const Onboarding = () => {
         }else{
             console.log('User data not set');
         }
-    }, [form, user, setUserData]);
+    }, [form, user, setUserData, userImageUrl, userMail]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (isSubmitting) return;
+        setIsSubmitting(true);
         await submitUserData();
+        setIsSubmitting(false);
         window.location.reload();
     };
 
     if(!isOpen) return null;
 
   return (
-    <div className = 'fixed inset-0 z-50 flex items-center justify-center bg-twitch-ice bg-opacity-50'>
+    <div className = 'fixed inset-0 z-40 flex items-center justify-center bg-twitch-ice bg-opacity-50'>
         <div className = 'bg-white text-gray-700 rounded-lg shadow-lg p-8 w-full max-w-md relative'>
             <button
                 className = 'absolute top-2 right-2 text-gray-400 hover:text-gray-600 text-2xl'
@@ -95,12 +96,12 @@ const Onboarding = () => {
                             type = 'email'
                             id = 'mail'
                             name = 'mail'
-                            value = {form.mail}
+                            value = {userMail}
                             onChange = {handleChange}
                             required
-                            disabled = {form.mail !== ''}
+                            disabled = {true}
                             className = {`w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus: ring-2 focus: ring-purple-500
-                                ${form.mail !== '' ? 'bg-gray-100 opacity-70' : ''}`}
+                                ${userMail !== '' ? 'bg-gray-100 opacity-70' : ''}`}
                             />
                     </div>
                     <div>
@@ -122,8 +123,9 @@ const Onboarding = () => {
                     </div>
                     <button
                         type = 'submit'
-                        className = 'w-full bg-purple-600 text-white py-2 rounded font-semibold hover:bg-purple-700 transition'
-                        >Submit</button>
+                        disabled = {isSubmitting}
+                        className = 'w-full bg-purple-600 text-white py-2 rounded font-semibold hover:bg-purple-700 transition disabled:opacity-60 disabled:cursor-not-allowed'
+                        >{isSubmitting ? 'Submitting...' : 'Submit'}</button>
                 </form>
         </div>
       

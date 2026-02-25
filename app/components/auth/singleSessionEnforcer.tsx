@@ -20,6 +20,9 @@ export default function SingleSessionEnforcer() {
       if (inFlightRef.current || signingOutRef.current) {
         return;
       }
+      if (document.body.dataset.skipSessionEnforcer === 'true') {
+        return;
+      }
 
       inFlightRef.current = true;
       try {
@@ -48,7 +51,7 @@ export default function SingleSessionEnforcer() {
         if (newestSession.id !== session.id) {
           if (!signingOutRef.current) {
             signingOutRef.current = true;
-            await signOut({ redirectUrl: '/login' });
+            await signOut({ redirectUrl: '/login?reason=session_replaced' });
           }
           return;
         }
@@ -64,7 +67,7 @@ export default function SingleSessionEnforcer() {
         if (!isCurrentSessionValid) {
           if (!signingOutRef.current) {
             signingOutRef.current = true;
-            await signOut({ redirectUrl: '/login' });
+            await signOut({ redirectUrl: '/login?reason=session_replaced' });
           }
           return;
         }
@@ -91,32 +94,18 @@ export default function SingleSessionEnforcer() {
       void enforceSingleSession();
     };
 
-    document.addEventListener('click', eventHandler, true);
-    document.addEventListener('pointerdown', eventHandler, true);
-    document.addEventListener('touchstart', eventHandler, true);
-    document.addEventListener('keydown', eventHandler, true);
     window.addEventListener('focus', eventHandler);
     window.addEventListener('popstate', eventHandler);
     window.addEventListener('hashchange', eventHandler);
     window.addEventListener('pageshow', eventHandler);
     document.addEventListener('visibilitychange', eventHandler);
 
-    // Fallback in case user stays idle for a long time.
-    const intervalId = window.setInterval(() => {
-      void enforceSingleSession();
-    }, 15000);
-
     return () => {
-      document.removeEventListener('click', eventHandler, true);
-      document.removeEventListener('pointerdown', eventHandler, true);
-      document.removeEventListener('touchstart', eventHandler, true);
-      document.removeEventListener('keydown', eventHandler, true);
       window.removeEventListener('focus', eventHandler);
       window.removeEventListener('popstate', eventHandler);
       window.removeEventListener('hashchange', eventHandler);
       window.removeEventListener('pageshow', eventHandler);
       document.removeEventListener('visibilitychange', eventHandler);
-      window.clearInterval(intervalId);
     };
   }, [isSessionLoaded, isSignedIn, isUserLoaded, session, signOut, user]);
 
