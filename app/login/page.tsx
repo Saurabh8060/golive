@@ -2,10 +2,11 @@
 import { SignedOut, SignInButton, SignUpButton, useUser } from '@clerk/nextjs';
 import Image from 'next/image';
 import { redirect, useSearchParams } from 'next/navigation';
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Button } from '../components/button/button';
 import logo from '@/app/golivehub-purple.svg';
-const Page = () => {
+
+const LoginContent = () => {
   const {isSignedIn} = useUser();
   const searchParams = useSearchParams();
   const reason = searchParams.get('reason');
@@ -37,5 +38,13 @@ const Page = () => {
     </section>
   )
 }
+
+const Page = () => {
+  return (
+    <Suspense fallback={<section className='flex h-screen w-screen items-center justify-center'>Loading...</section>}>
+      <LoginContent />
+    </Suspense>
+  );
+};
 
 export default Page

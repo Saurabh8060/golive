@@ -65,6 +65,7 @@ export const DatabaseProvider = ({
       accessToken: async () => accessToken,
     });
 
+    setError(null);
     setSupabase(supabaseClient);
   }, []);
 
@@ -86,20 +87,13 @@ const { session } = useSession();
     }
     
     try {
-      // Refresh token before making the request
-      if (session) {
-        const freshToken = await session.getToken();
-        if (freshToken && supabase) {
-          // Update auth token in supabase client
-          supabase.realtime.setAuth(freshToken);
-        }
-      }
-      
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .ilike(field, `%${userId}`)
-        .single();
+      setError(null);
+      const query = supabase.from("users").select("*");
+      const byField =
+        field === "user_id" || field === "mail"
+          ? query.eq(field, userId)
+          : query.ilike(field, `%${userId}%`);
+      const { data, error } = await byField.maybeSingle();
 
       console.log("User data: ", data);
       
@@ -107,10 +101,14 @@ const { session } = useSession();
         // If JWT expired error, try one more time with fresh client
         if (error.code === 'PGRST301' || error.message.includes('JWT')) {
           console.log('JWT expired, reinitializing client...');
-          const newToken = await session?.getToken();
-          if (newToken) {
-            setSupabaseClient(newToken);
-            // Retry the request will happen on next call
+          try {
+            const newToken = await session?.getToken();
+            if (newToken) {
+              setSupabaseClient(newToken);
+              // Retry the request will happen on next call
+            }
+          } catch (tokenError) {
+            console.log("Error refreshing Clerk token", tokenError);
           }
         }
         
@@ -120,8 +118,10 @@ const { session } = useSession();
       }
       
       return data;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error getting user data", error);
+      const message = error instanceof Error ? error.message : String(error);
+      setError(`Error getting user data: ${message}`);
       return null;
     }
   },
@@ -141,7 +141,7 @@ const { session } = useSession();
       }
       const { data, error } = await supabase
         .from("users")
-        .insert({
+        .upsert({
           user_id: userId,
           image_url: imageUrl,
           mail: mail,
@@ -150,6 +150,8 @@ const { session } = useSession();
           following: [],
           followers: [],
           interests: [],
+        }, {
+          onConflict: "user_id",
         })
         .select()
         .single();
