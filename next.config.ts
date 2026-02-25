@@ -15,6 +15,14 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'thispersondoesnotexist.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.clerk.dev'
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.clerk.com'
       }
     ]
   }
