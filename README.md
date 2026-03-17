@@ -1,36 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 GoLiveHub — Stock Sentiment Dashboard
 
-## Getting Started
+🔗 **Live Demo:** https://golivehub.vercel.app/
 
-First, run the development server:
+GoLiveHub is a web dashboard that visualizes sentiment from financial news for a given stock keyword.
+It consumes a backend API and presents sentiment insights through charts, KPIs, and article-level data.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🧠 What It Does
+
+* Search for a stock (e.g., `AAPL`, `TSLA`)
+* Fetch recent news sentiment data from an API
+* Display:
+
+  * Sentiment distribution (positive / neutral / negative)
+  * Sentiment trends over time
+  * Latest articles with confidence scores
+* Request sentiment reports via email
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend**
+
+* Next.js (App Router)
+* TypeScript
+* Tailwind CSS
+* Recharts
+
+**Architecture**
+
+* API-driven frontend
+* Service layer for API calls
+* Typed data models
+
+---
+
+## 📂 Project Structure
+
+```
+├── app/                # Next.js entry and layout
+├── components/         # Dashboard UI
+├── services/           # API calls
+├── types/              # Data models
+└── next.config.ts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ⚙️ Running Locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Install dependencies
 
-## Learn More
+```
+npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Set environment variable
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Create `.env.local`:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+NEXT_PUBLIC_API_BASE=http://localhost:8000
+```
 
-## Deploy on Vercel
+### Start development server
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open:
+
+```
+http://localhost:3000
+```
+
+---
+
+## 🔌 API Endpoints
+
+### GET `/dashboard?keyword=XYZ`
+
+Returns aggregated sentiment data including KPIs, trends, and articles.
+
+---
+
+### POST `/email/request`
+
+Request payload:
+
+```
+{
+  "keyword": "AAPL",
+  "start_date": "YYYY-MM-DD",
+  "end_date": "YYYY-MM-DD",
+  "email": "user@example.com",
+  "max_records": 1000
+}
+```
+
+Queues a sentiment report to be sent via email.
+
+---
+
+## 📊 Dashboard Components
+
+* KPI summary cards
+* Sentiment distribution chart
+* Trend line chart
+* News table with sentiment + confidence
+
+---
+
+## ⚠️ Limitations
+
+* Requires backend API
+* Sentiment output depends on model accuracy
+* Focused on recent data
+
+---
+
+## 👤 Author
+
+Saurabh Manchanda
